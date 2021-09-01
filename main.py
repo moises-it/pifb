@@ -1,0 +1,349 @@
+#!/usr/bin/python3.7
+import subprocess
+import socket
+import os
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+from tkinter import font
+
+#Variables
+#Device id can be found by doing lsusb command and checking by removing device
+#sd_cf_reader = "3207:0300"
+
+
+
+#Functions
+
+#Test internet
+IPaddress=socket.gethostbyname(socket.gethostname())
+def test_net():
+    if IPaddress=="127.0.0.1":
+        return  False
+    else:
+        return True
+
+#Test internet and display messagebox
+def test_net_gui():
+    if test_net():
+        tk.messagebox.showinfo(title="Success!",message="Connected to the network")
+    else:
+        tk.messagebox.showerror(title="No Network",message="Not connected to the internet")
+    return
+
+#Test if media card is connected
+#return code 3 = is connected , 4 means not connected
+#def check_sdcf():
+#    check = subprocess.run([os.path.join("/home/pi/backupprogram/", "checker.sh"), sd_cf_reader])
+#    result = False
+#    if check.returncode == 3:
+#        result = False
+#    elif check.returncode == 4:
+#        result = True
+#    else:
+#        result = "Error"
+#    return result
+
+
+#Test button
+#def buttonyeet():
+#    a = check_sdcf()
+#    if a:
+#        tk.messagebox.showinfo(title="Success!",message="Card reader is connected!")
+#    elif a == False:
+#        tk.messagebox.showerror(title="No device...",message="Card reader isn't connected!")
+#    return
+
+#Import settings from config file
+#def config_set():
+#    with open('config', 'rb') as config:
+#        a = config.read()
+#    return a
+#Window
+
+#^ stuff above has been scrapt but kept just in case (was meant to check if a certain card reader was connected but this
+#  cont... function is now obsolete due to the ability to list all mounted drives
+
+root = tk.Tk()
+root.attributes("-fullscreen", True)
+root.geometry("480x320")
+
+tabControl = ttk.Notebook(root)
+tab1 = ttk.Frame(tabControl)
+tab2 = ttk.Frame(tabControl)
+tab3 = ttk.Frame(tabControl)
+tab4 = ttk.Frame(tabControl)
+
+tabControl.add(tab1, text ='Test')
+tabControl.add(tab2, text ='Drive')
+tabControl.add(tab3, text ='Network')
+tabControl.add(tab4, text ='Optical')
+
+tabControl.pack(expand = 1, fill="both")
+#test network button
+btn_net = tk.Button(tab1, text="Test Wifi", command=test_net_gui)
+btn_net.pack()
+
+#test if media reader is connected
+#btn_media = tk.Button(root, text="Check SD/CF", command=test_media_card)
+#btn_media.pack()
+
+def close_form():
+    root.destroy()
+    return
+
+#Exit button
+btn_exit = tk.Button(tab1, text="Exit", command=close_form)
+
+#buton yeet
+#btn_yeet = tk.Button(tab1, text="SD/CF", command=buttonyeet)
+#btn_yeet.pack()
+
+
+btn_exit.pack()
+
+
+#Drive Tab
+lbl_drive = tk.Label(tab2, text="Select Drives", font=('Modern', '20'))
+
+
+drives = os.listdir(os.path.join("", "/media/pi/"))
+drive_path = []
+
+for x in drives:
+    drive_path.append(os.path.join("/media/pi/", x))
+
+from_groupbox = tk.LabelFrame(tab2, text="From")
+to_groupbox = tk.LabelFrame(tab2, text="To")
+
+drive_lb = tk.Listbox(from_groupbox, selectmode=tk.SINGLE, exportselection=0)
+drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
+
+def refresh_drives(listboxlb):
+    listboxlb.delete('0', 'end')
+    drives = os.listdir(os.path.join("", "/media/pi/"))
+    for x in drives:
+        drive_path.append(os.path.join("/media/pi/", x))
+    for x in drives:
+        listboxlb.insert(tk.END, x)
+    return
+
+#refresh both drives from & to
+def ref_from_to():
+    refresh_drives(drive_lb)
+    refresh_drives(drive_lb2)
+    return
+
+    #Initial refresh
+refresh_drives(drive_lb)
+refresh_drives(drive_lb2)
+
+    #Copy from drive to drive
+def copy_drive():
+
+    try:
+        drive_from = drive_lb.get(drive_lb.curselection())
+        drive_to = drive_lb2.get(drive_lb2.curselection())
+    except:
+        tk.messagebox.showerror(title="Error!", message="Please select drives to copy files")
+    else:
+        #Check if user selected same drive on both listbox
+        if drive_from == drive_to:
+            tk.messagebox.showerror(title="Error",message="Can't copy to the same drive!")
+        else:
+            #Contuine if drives are selected properly
+            #Check if space available
+            from_path = os.path.join("/media/pi/", drive_from)
+            to_path = os.path.join("/media/pi/", drive_to)
+            from_stat = os.statvfs(from_path)
+            to_stat = os.statvfs(to_path)
+
+            from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
+            from_space_size_gib = from_space_size / 1073741824
+            to_space_available = (to_stat.f_frsize * to_stat.f_bfree)
+            
+            continue_yn = True
+            if from_space_size > to_space_available:
+                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on the destination media, try anyways?", icon="warning")
+                if msgbox_space == 'no':
+                    continue_yn = False
+
+            if continue_yn:
+                copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to " + drive_to + "?"
+                copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
+
+                if copy_yn == 'no':
+                    tk.messagebox.showinfo(message="Copy aborted.")
+                if copy_yn == 'yes':
+                    #update label
+                    lbl_drive.config(text="Do not remove/move media!", fg="RED")
+                    tk.messagebox.showwarning(message="Do not remove/move media!")
+                    def rsync_copy():
+                        #Create new window with verbose
+                        copy_verbose = tk.Tk()
+                        copy_verbose.attributes("-fullscreen", True)
+                        copy_verbose.geometry("480x320")
+
+                        #add exit button
+                        def verbose_exit():
+                            copy_verbose.destroy()
+                            return
+
+                        btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
+
+                        rsync_log_txt = tk.Text(copy_verbose)
+                        rsync_log_txt.pack(side=tk.TOP)
+                        rsync_log_txt.place(height=200,width=480)
+
+                        scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
+                        scrollbar.pack(side=tk.RIGHT, fill="y")
+
+                        rsync_log_txt.config(yscrollcommand=scrollbar.set)
+
+                        #Rsync section
+                        try:
+                            cmd = "rsync -r -v /media/pi/'" + drive_from + "' /media/pi/'" + drive_to + "'"
+                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                            out,err = rsync_cmd.communicate() 
+                            stdout = open('log', 'w')
+                            stdout.writelines(out)
+                            stdout.close()
+                        except:
+                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                        
+                        #Start rsync on seperate thread to allow output to log while user waits
+                        #thread1 = thread.start_new_thread(rsync, ())
+                        
+                        verbose = open('log', 'r')
+                        Lines = verbose.readlines()
+                        for line in Lines:
+                            rsync_log_txt.insert(tk.END, line)
+                            rsync_log_txt.see(tk.END)
+                        #Add exit button when finished copying
+                        btn_verbose_exit.pack(side=tk.BOTTOM)
+
+                        lbl_drive.config(text="Copied!", fg="GREEN")
+                        return
+                    rsync_copy()
+            else:
+                tk.messagebox.showinfo(message="Copy aborted.")
+    return
+
+def net_backup_drive():
+
+    try:
+        drive_from = net_lb.get(net_lb.curselection())
+    except:
+        tk.messagebox.showerror(title="Error!", message="Please select drives to copy files")
+    else:
+        #Check if space available
+        from_path = os.path.join("/media/pi/", drive_from)
+        from_stat = os.statvfs(from_path)
+        from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
+        from_space_size_gib = from_space_size / 1073741824
+        
+        #retrieve space available on remote server
+        try:
+            cmd = "ssh fileserver freespace_check"
+            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            out = rsync_cmd.communicate() 
+            to_space_available = out 
+        #If there is a failure contacting server, abort since you can't copy anyways
+        except:
+            tk.messagebox.showerror(title="Error!", message="Something went wrong contacting server...")
+        #continue rest of code if all is well
+        else:
+
+            continue_yn = True
+            print(int((to_space_available[0])))
+            if from_space_size > int((to_space_available[0])):
+                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on the destination media, try anyways?", icon="warning")
+                if msgbox_space == 'no':
+                    continue_yn = False
+
+            if continue_yn:
+                copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to Server?"
+                copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
+
+                if copy_yn == 'no':
+                    tk.messagebox.showinfo(message="Copy aborted.")
+                if copy_yn == 'yes':
+                    #update label
+                    lbl_network.config(text="Do not remove/move media!", fg="RED")
+                    tk.messagebox.showwarning(message="Do not remove/move media!")
+                    def rsync_copy():
+                        #Create new window with verbose
+                        copy_verbose = tk.Tk()
+                        copy_verbose.attributes("-fullscreen", True)
+                        copy_verbose.geometry("480x320")
+
+                        #add exit button
+                        def verbose_exit():
+                            copy_verbose.destroy()
+                            return
+
+                        btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
+
+                        rsync_log_txt = tk.Text(copy_verbose)
+                        rsync_log_txt.pack(side=tk.TOP)
+                        rsync_log_txt.place(height=200,width=480)
+
+                        scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
+                        scrollbar.pack(side=tk.RIGHT, fill="y")
+                        rsync_log_txt.config(yscrollcommand=scrollbar.set)
+
+                        #Rsync section
+                        try:
+                            cmd = "rsync -r -v /media/pi/'" + drive_from + "' fileserver:~/backup"
+                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                            out,err = rsync_cmd.communicate() 
+                            stdout = open('log', 'w')
+                            stdout.writelines(out)
+                            stdout.close()
+                        except:
+                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                         
+                        verbose = open('log', 'r')
+                        Lines = verbose.readlines()
+                        for line in Lines:
+                            rsync_log_txt.insert(tk.END, line)
+                            rsync_log_txt.see(tk.END)
+                            #Add exit button when finished copying
+                        btn_verbose_exit.pack(side=tk.BOTTOM)
+
+                        lbl_network.config(text="Copied!", fg="GREEN")
+                        return
+                    rsync_copy()
+            else:
+                tk.messagebox.showinfo(message="Copy aborted.")
+    return
+
+#Network copying
+lbl_network = tk.Label(tab3, text="Select Drive to Backup", font=('Modern', '20'))
+net_groupbox = tk.LabelFrame(tab3, text="Drives")
+net_lb = tk.Listbox(net_groupbox, selectmode=tk.SINGLE, exportselection=0)
+#initial drive refresh for net_lb (listbox)
+refresh_drives(net_lb)
+btn_net_test_internet = tk.Button(tab3, text="Test Wifi", command=test_net_gui)
+btn_net_copy = tk.Button(tab3, text="Backup", command=net_backup_drive)
+
+
+    #packing
+btn_drive_refresh = tk.Button(tab2, text="Refresh Devices", fg="BLUE", command=ref_from_to)
+btn_drive_start = tk.Button(tab2, text="Copy", fg="GREEN", command=copy_drive)
+
+lbl_drive.pack()
+btn_drive_refresh.pack()
+btn_drive_start.pack(side=tk.BOTTOM)
+from_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
+to_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
+drive_lb2.pack()
+drive_lb.pack()
+
+lbl_network.pack()
+net_groupbox.pack()
+net_lb.pack()
+btn_net_test_internet.pack()
+btn_net_copy.pack()
+root.mainloop()
+
