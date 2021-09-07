@@ -74,7 +74,7 @@ tab2 = ttk.Frame(tabControl)
 tab3 = ttk.Frame(tabControl)
 tab4 = ttk.Frame(tabControl)
 
-tabControl.add(tab1, text ='Test')
+#tabControl.add(tab1, text ='Test')
 tabControl.add(tab2, text ='Drive')
 tabControl.add(tab3, text ='Network')
 tabControl.add(tab4, text ='Optical')
@@ -104,7 +104,7 @@ btn_exit.pack()
 
 
 #Drive Tab
-lbl_drive = tk.Label(tab2, text="Select Drives", font=('Modern', '20'))
+lbl_drive = tk.Label(tab2, text="Select Drives To Transfer", font=('Modern', '20'))
 
 
 drives = os.listdir(os.path.join("", "/media/pi/"))
@@ -321,16 +321,20 @@ def net_backup_drive():
 #Network copying
 lbl_network = tk.Label(tab3, text="Select Drive to Backup", font=('Modern', '20'))
 net_groupbox = tk.LabelFrame(tab3, text="Drives")
+netbtn_groupbox = tk.LabelFrame(tab3)
 net_lb = tk.Listbox(net_groupbox, selectmode=tk.SINGLE, exportselection=0)
 #initial drive refresh for net_lb (listbox)
 refresh_drives(net_lb)
-btn_net_test_internet = tk.Button(tab3, text="Test Wifi", command=test_net_gui)
-btn_net_copy = tk.Button(tab3, text="Backup", command=net_backup_drive)
-
-
+btn_net_test_internet = tk.Button(netbtn_groupbox, text="Test Wifi", command=test_net_gui)
+btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_drive)
+btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
+btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
     #packing
 btn_drive_refresh = tk.Button(tab2, text="Refresh Devices", fg="BLUE", command=ref_from_to)
-btn_drive_start = tk.Button(tab2, text="Copy", fg="GREEN", command=copy_drive)
+btn_drive_start = tk.Button(tab2, text="Transfer Files", fg="GREEN", command=copy_drive)
+
+#btn_2 = btn_net_exit(text="something")
+
 
 lbl_drive.pack()
 btn_drive_refresh.pack()
@@ -341,9 +345,13 @@ drive_lb2.pack()
 drive_lb.pack()
 
 lbl_network.pack()
-net_groupbox.pack()
+net_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
+netbtn_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
 net_lb.pack()
 btn_net_test_internet.pack()
 btn_net_copy.pack()
+btn_net_refresh.pack()
+btn_net_exit.pack()
+#btn_2.pack()
 root.mainloop()
 
