@@ -7,34 +7,25 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import font
 
-#Create/Read config file
+#Config/Default stuff
 config = []
-default = ['mount=/media/pi/','sshalias=fileserver','remotescript=space_check.py']
-mount_path = ""
-sshalias = ""
-remotescript = ""
+mount_path = "/media/pi/"
+sshalias = "fileserver"
+remotescript = "space_check.py"
+remotepath = "~/backup"
 try:
     config_txt = open('config','r')
     config = config_txt.read()
     mount_path = (config[0].split("="))[1]
     sshalias = (config[1].split("="))[1]
     remotescript = (config[2].split("="))[1]
+    remotepath = (config[3].split("="))[1]
 except:
     tk.messagebox.showerror(title="Error!", message="Error with config, using default settings")
-    create_config = "touch config"
-    subprocess.Popen(create_config, shell=True)
-    config = default
-    mount_path = (config[0].split("="))[1]
-    sshalias = (config[1].split("="))[1]
-    remotescript = (config[2].split("="))[1]
-else:
-    config = default
-    mount_path = (config[0].split("="))[1]
-    sshalias = (config[1].split("="))[1]
-    remotescript = (config[2].split("="))[1]
-
-
-
+    try:
+        f = open("config", w)
+        f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
+        f.close()
 
 #Functions
 
@@ -78,19 +69,17 @@ def close_form():
     return
 
 #Exit button
-btn_exit = tk.Button(tab1, text="Exit", command=close_form)
-btn_exit.pack()
-
+tab1_btn_exit = tk.Button(tab1, text="Exit", command=close_form)
 
 #Drive Tab
 lbl_drive = tk.Label(tab1, text="Select Drives To Transfer", font=('Modern', '20'))
 
 
-drives = os.listdir(os.path.join("", "/media/pi/"))
+drives = os.listdir(os.path.join("", mount_path))
 drive_path = []
 
 for x in drives:
-    drive_path.append(os.path.join("/media/pi/", x))
+    drive_path.append(os.path.join(mount_path, x))
 
 from_groupbox = tk.LabelFrame(tab1, text="From")
 to_groupbox = tk.LabelFrame(tab1, text="To")
@@ -100,9 +89,9 @@ drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
 
 def refresh_drives(listboxlb):
     listboxlb.delete('0', 'end')
-    drives = os.listdir(os.path.join("", "/media/pi/"))
+    drives = os.listdir(os.path.join("", mount_path))
     for x in drives:
-        drive_path.append(os.path.join("/media/pi/", x))
+        drive_path.append(os.path.join(mount_path, x))
     for x in drives:
         listboxlb.insert(tk.END, x)
     return
@@ -119,7 +108,6 @@ refresh_drives(drive_lb2)
 
     #Copy from drive to drive
 def copy_drive():
-
     try:
         drive_from = drive_lb.get(drive_lb.curselection())
         drive_to = drive_lb2.get(drive_lb2.curselection())
@@ -132,8 +120,8 @@ def copy_drive():
         else:
             #Contuine if drives are selected properly
             #Check if space available
-            from_path = os.path.join("/media/pi/", drive_from)
-            to_path = os.path.join("/media/pi/", drive_to)
+            from_path = os.path.join(mount_path, drive_from)
+            to_path = os.path.join(mount_path, drive_to)
             from_stat = os.statvfs(from_path)
             to_stat = os.statvfs(to_path)
 
@@ -182,7 +170,7 @@ def copy_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v /media/pi/'" + drive_from + "' /media/pi/'" + drive_to + "'"
+                            cmd = "rsync -r -v " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             universal_newlines=True)
                             out,err = rsync_cmd.communicate()
@@ -211,21 +199,20 @@ def copy_drive():
     return
 
 def net_backup_drive():
-
     try:
         drive_from = net_lb.get(net_lb.curselection())
     except:
         tk.messagebox.showerror(title="Error!", message="Please select drives to copy files")
     else:
         #Check if space available
-        from_path = os.path.join("/media/pi/", drive_from)
+        from_path = os.path.join(mount_path, drive_from)
         from_stat = os.statvfs(from_path)
         from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
         from_space_size_gib = from_space_size / 1073741824
 
         #retrieve space available on remote server
         try:
-            cmd = "ssh fileserver freespace_check"
+            cmd = "ssh " + sshalias + " " + remotescript
             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
             out = rsync_cmd.communicate()
             to_space_available = out
@@ -276,7 +263,7 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v /media/pi/'" + drive_from + "' fileserver:~/backup"
+                            cmd = "rsync -r -v " os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, universal_newlines=True)
                             out,err = rsync_cmd.communicate()
@@ -299,6 +286,12 @@ def net_backup_drive():
             else:
                 tk.messagebox.showinfo(message="Copy aborted.")
     return
+def remote_space_btn():
+    try:
+        cmd = "ssh " + sshalias + " " + remotescript
+        rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        space_available = rsync_cmd.communicate()
+        tk.messagebox.showinfo(message="There is " + ((int(space_available))/1073742000) + "G available on the remote server.")
 
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
@@ -311,11 +304,8 @@ btn_net_test_internet = tk.Button(netbtn_groupbox, text="Test Wifi", command=tes
 btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_drive)
 btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
 btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
-    #packing
 btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", fg="BLUE", command=ref_from_to)
 btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=copy_drive)
-
-#btn_2 = btn_net_exit(text="something")
 
 
 lbl_drive.pack()
