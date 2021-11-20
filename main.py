@@ -30,9 +30,9 @@ except:
 #Functions
 
 #Test internet
-IPaddress = socket.gethostbyname(socket.gethostname())
+netipaddress = socket.gethostbyname(socket.gethostname())
 def test_net():
-    if IPaddress=="127.0.0.1":
+    if netipaddress=="127.0.0.1":
         return  False
     else:
         return True
