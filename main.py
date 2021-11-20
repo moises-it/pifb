@@ -22,9 +22,10 @@ try:
     remotepath = (config[3].split("="))[1]
 except:
     print("Error with config, using default settings")
-    
+
     f = open("config", "w")
-    f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
+    options = ["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath]
+    f.writelines(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
     f.close()
     #except:
         #print("Error with creation")
