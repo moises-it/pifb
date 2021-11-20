@@ -14,19 +14,17 @@ sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/backup"
 try:
-    config_txt = openlines('config','r')
-    config = config_txt.read()
+    config_txt = open('config','r')
+    config = config_txt.readlines()
     mount_path = (config[0].split("="))[1]
     sshalias = (config[1].split("="))[1]
     remotescript = (config[2].split("="))[1]
     remotepath = (config[3].split("="))[1]
 except:
     print("Error with config, using default settings")
-
     f = open("config", "w")
     options = ["Mount_Path=" + mount_path + "\n", "SSHalias=" + sshalias + "\n",
     "RemoteScript=" + remotescript + "\n", "RemotePath=" + remotepath + "\n"]
-
     f.writelines(options)
     f.close()
     #except:
