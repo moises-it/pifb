@@ -293,7 +293,8 @@ def remote_space_btn():
         rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         space_available = rsync_cmd.communicate()
         tk.messagebox.showinfo(message="There is " + ((int(space_available))/1073742000) + "G available on the remote server.")
-
+    except:
+        print("Error with checking space on remote server")
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
 net_groupbox = tk.LabelFrame(tab2, text="Drives")
