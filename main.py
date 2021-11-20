@@ -295,7 +295,7 @@ def remote_space_btn():
     space_available = cmd_run.communicate()
     print("Space_available ")
     print(space_available)
-    space_gib = str(round((space_available)/1073742000, 2))
+    space_gib = str(round(int(space_available)/1073742000, 2))
     print(space_gib)
     tk.messagebox.showinfo(message="There is " + str(space) + "G available on the remote server.")
     print("Error with checking space on remote server")
