@@ -25,9 +25,9 @@ except:
 
     f = open("config", "w")
     options = ["Mount_Path=" + mount_path + "\n", "SSHalias=" + sshalias + "\n",
-    "RemoteScript=" + remotescript + "\n", "RemotePath=" + remotepath]
+    "RemoteScript=" + remotescript + "\n", "RemotePath=" + remotepath + "\n"]
 
-    f.writelines(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
+    f.writelines(options)
     f.close()
     #except:
         #print("Error with creation")
