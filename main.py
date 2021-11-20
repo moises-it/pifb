@@ -7,9 +7,32 @@ from tkinter import ttk
 from tkinter import messagebox
 from tkinter import font
 
-#Variables
-#Device id can be found by doing lsusb command and checking by removing device
-#sd_cf_reader = "3207:0300"
+#Create/Read config file
+config = []
+default = ['mount=/media/pi/','sshalias=fileserver','remotescript=space_check.py']
+mount_path = ""
+sshalias = ""
+remotescript = ""
+try:
+    config_txt = open('config','r')
+    config = config_txt.read()
+    mount_path = (config[0].split("="))[1]
+    sshalias = (config[1].split("="))[1]
+    remotescript = (config[2].split("="))[1]
+except:
+    tk.messagebox.showerror(title="Error!", message="Error with config, using default settings")
+    create_config = "touch config"
+    subprocess.Popen(create_config, shell=True)
+    config = default
+    mount_path = (config[0].split("="))[1]
+    sshalias = (config[1].split("="))[1]
+    remotescript = (config[2].split("="))[1]
+else:
+    config = default
+    mount_path = (config[0].split("="))[1]
+    sshalias = (config[1].split("="))[1]
+    remotescript = (config[2].split("="))[1]
+
 
 
 
@@ -42,19 +65,14 @@ tab3 = ttk.Frame(tabControl)
 tab4 = ttk.Frame(tabControl)
 
 #tabControl.add(tab1, text ='Test')
-tabControl.add(tab2, text ='Drive')
-tabControl.add(tab3, text ='Network')
-tabControl.add(tab4, text ='Optical')
+tabControl.add(tab1, text ='Drive')
+tabControl.add(tab2, text ='Network')
+tabControl.add(tab3, text ='Optical')
+tabControl.add(tab4, text ='Config')
 
 tabControl.pack(expand = 1, fill="both")
-#test network button
-btn_net = tk.Button(tab1, text="Test Wifi", command=test_net_gui)
-btn_net.pack()
 
-#test if media reader is connected
-#btn_media = tk.Button(root, text="Check SD/CF", command=test_media_card)
-#btn_media.pack()
-
+#Exit button function
 def close_form():
     root.destroy()
     return
@@ -65,7 +83,7 @@ btn_exit.pack()
 
 
 #Drive Tab
-lbl_drive = tk.Label(tab2, text="Select Drives To Transfer", font=('Modern', '20'))
+lbl_drive = tk.Label(tab1, text="Select Drives To Transfer", font=('Modern', '20'))
 
 
 drives = os.listdir(os.path.join("", "/media/pi/"))
@@ -74,8 +92,8 @@ drive_path = []
 for x in drives:
     drive_path.append(os.path.join("/media/pi/", x))
 
-from_groupbox = tk.LabelFrame(tab2, text="From")
-to_groupbox = tk.LabelFrame(tab2, text="To")
+from_groupbox = tk.LabelFrame(tab1, text="From")
+to_groupbox = tk.LabelFrame(tab1, text="To")
 
 drive_lb = tk.Listbox(from_groupbox, selectmode=tk.SINGLE, exportselection=0)
 drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
@@ -125,7 +143,8 @@ def copy_drive():
 
             continue_yn = True
             if from_space_size > to_space_available:
-                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on the destination media, try anyways?", icon="warning")
+                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space \
+                on the destination media, try anyways?", icon="warning")
                 if msgbox_space == 'no':
                     continue_yn = False
 
@@ -164,7 +183,8 @@ def copy_drive():
                         #Rsync section
                         try:
                             cmd = "rsync -r -v /media/pi/'" + drive_from + "' /media/pi/'" + drive_to + "'"
-                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                            universal_newlines=True)
                             out,err = rsync_cmd.communicate()
                             stdout = open('log', 'w')
                             stdout.writelines(out)
@@ -218,7 +238,8 @@ def net_backup_drive():
             continue_yn = True
             print(int((to_space_available[0])))
             if from_space_size > int((to_space_available[0])):
-                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on the destination media, try anyways?", icon="warning")
+                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
+                the destination media, try anyways?", icon="warning")
                 if msgbox_space == 'no':
                     continue_yn = False
 
@@ -256,14 +277,14 @@ def net_backup_drive():
                         #Rsync section
                         try:
                             cmd = "rsync -r -v /media/pi/'" + drive_from + "' fileserver:~/backup"
-                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, universal_newlines=True)
                             out,err = rsync_cmd.communicate()
                             stdout = open('log', 'w')
                             stdout.writelines(out)
                             stdout.close()
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-
                         verbose = open('log', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
@@ -280,9 +301,9 @@ def net_backup_drive():
     return
 
 #Network copying
-lbl_network = tk.Label(tab3, text="Select Drive to Backup", font=('Modern', '20'))
-net_groupbox = tk.LabelFrame(tab3, text="Drives")
-netbtn_groupbox = tk.LabelFrame(tab3)
+lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
+net_groupbox = tk.LabelFrame(tab2, text="Drives")
+netbtn_groupbox = tk.LabelFrame(tab2)
 net_lb = tk.Listbox(net_groupbox, selectmode=tk.SINGLE, exportselection=0)
 #initial drive refresh for net_lb (listbox)
 refresh_drives(net_lb)
@@ -291,8 +312,8 @@ btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_driv
 btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
 btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
     #packing
-btn_drive_refresh = tk.Button(tab2, text="Refresh Devices", fg="BLUE", command=ref_from_to)
-btn_drive_start = tk.Button(tab2, text="Transfer Files", fg="GREEN", command=copy_drive)
+btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", fg="BLUE", command=ref_from_to)
+btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=copy_drive)
 
 #btn_2 = btn_net_exit(text="something")
 
