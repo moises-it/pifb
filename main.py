@@ -22,12 +22,12 @@ try:
     remotepath = (config[3].split("="))[1]
 except:
     print("Error with config, using default settings")
-    try:
-        f = open("config", w)
-        f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
-        f.close()
-    except:
-        print("Error with creation")
+    
+    f = open("config", w)
+    f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
+    f.close()
+    #except:
+        #print("Error with creation")
 #Functions
 
 #Test internet
@@ -290,7 +290,6 @@ def net_backup_drive():
 def remote_space_btn():
     try:
         cmd = "ssh " + sshalias + " " + remotescript
-        print(cmd)
         cmd_run = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         space_available = cmd_run.communicate()
         space_gib = (round(int(space_available[0])/1073742000, 2))
