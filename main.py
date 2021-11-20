@@ -16,7 +16,7 @@ remotepath = "~/backup"
 try:
     config_txt = open('config','r')
     config = config_txt.readlines()
-    #[:-2] removes the \n
+    #[:-2] removes the invisible \n at the end of each option from the config
     mount_path = ((config[0].split("="))[1])[:-2]
     sshalias = ((config[1].split("="))[1])[:-2]
     remotescript = ((config[2].split("="))[1])[:-2]
@@ -28,8 +28,6 @@ except:
     "RemoteScript=" + remotescript, "RemotePath=" + remotepath]
     f.writelines(options)
     f.close()
-    #except:
-        #print("Error with creation")
 #Functions
 
 #Test internet
