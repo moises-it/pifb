@@ -290,8 +290,10 @@ def net_backup_drive():
 def remote_space_btn():
     try:
         cmd = "ssh " + sshalias + " " + remotescript
-        rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        space_available = rsync_cmd.communicate()
+        print(cmd)
+        cmd_run = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        space_available = cmd_run.communicate()
+        print(space_available)
         tk.messagebox.showinfo(message="There is " + ((int(space_available))/1073742000) + "G available on the remote server.")
     except:
         print("Error with checking space on remote server")
