@@ -21,7 +21,7 @@ try:
     remotescript = (config[2].split("="))[1]
     remotepath = (config[3].split("="))[1]
 except:
-    tk.messagebox.showerror(title="Error!", message="Error with config, using default settings")
+    print("Error with config, using default settings")
     try:
         f = open("config", w)
         f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
