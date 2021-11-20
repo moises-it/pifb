@@ -23,7 +23,7 @@ try:
 except:
     print("Error with config, using default settings")
     
-    f = open("config", w)
+    f = open("config", "w")
     f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
     f.close()
     #except:
