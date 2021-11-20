@@ -31,39 +31,6 @@ def test_net_gui():
         tk.messagebox.showerror(title="No Network",message="Not connected to the internet")
     return
 
-#Test if media card is connected
-#return code 3 = is connected , 4 means not connected
-#def check_sdcf():
-#    check = subprocess.run([os.path.join("/home/pi/backupprogram/", "checker.sh"), sd_cf_reader])
-#    result = False
-#    if check.returncode == 3:
-#        result = False
-#    elif check.returncode == 4:
-#        result = True
-#    else:
-#        result = "Error"
-#    return result
-
-
-#Test button
-#def buttonyeet():
-#    a = check_sdcf()
-#    if a:
-#        tk.messagebox.showinfo(title="Success!",message="Card reader is connected!")
-#    elif a == False:
-#        tk.messagebox.showerror(title="No device...",message="Card reader isn't connected!")
-#    return
-
-#Import settings from config file
-#def config_set():
-#    with open('config', 'rb') as config:
-#        a = config.read()
-#    return a
-#Window
-
-#^ stuff above has been scrapt but kept just in case (was meant to check if a certain card reader was connected but this
-#  cont... function is now obsolete due to the ability to list all mounted drives
-
 root = tk.Tk()
 root.attributes("-fullscreen", True)
 root.geometry("480x320")
@@ -94,12 +61,6 @@ def close_form():
 
 #Exit button
 btn_exit = tk.Button(tab1, text="Exit", command=close_form)
-
-#buton yeet
-#btn_yeet = tk.Button(tab1, text="SD/CF", command=buttonyeet)
-#btn_yeet.pack()
-
-
 btn_exit.pack()
 
 
@@ -161,7 +122,7 @@ def copy_drive():
             from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
             from_space_size_gib = from_space_size / 1073741824
             to_space_available = (to_stat.f_frsize * to_stat.f_bfree)
-            
+
             continue_yn = True
             if from_space_size > to_space_available:
                 msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on the destination media, try anyways?", icon="warning")
@@ -204,16 +165,16 @@ def copy_drive():
                         try:
                             cmd = "rsync -r -v /media/pi/'" + drive_from + "' /media/pi/'" + drive_to + "'"
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                            out,err = rsync_cmd.communicate() 
+                            out,err = rsync_cmd.communicate()
                             stdout = open('log', 'w')
                             stdout.writelines(out)
                             stdout.close()
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                        
+
                         #Start rsync on seperate thread to allow output to log while user waits
                         #thread1 = thread.start_new_thread(rsync, ())
-                        
+
                         verbose = open('log', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
@@ -241,13 +202,13 @@ def net_backup_drive():
         from_stat = os.statvfs(from_path)
         from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
         from_space_size_gib = from_space_size / 1073741824
-        
+
         #retrieve space available on remote server
         try:
             cmd = "ssh fileserver freespace_check"
             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            out = rsync_cmd.communicate() 
-            to_space_available = out 
+            out = rsync_cmd.communicate()
+            to_space_available = out
         #If there is a failure contacting server, abort since you can't copy anyways
         except:
             tk.messagebox.showerror(title="Error!", message="Something went wrong contacting server...")
@@ -296,13 +257,13 @@ def net_backup_drive():
                         try:
                             cmd = "rsync -r -v /media/pi/'" + drive_from + "' fileserver:~/backup"
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-                            out,err = rsync_cmd.communicate() 
+                            out,err = rsync_cmd.communicate()
                             stdout = open('log', 'w')
                             stdout.writelines(out)
                             stdout.close()
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                         
+
                         verbose = open('log', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
@@ -354,4 +315,3 @@ btn_net_refresh.pack()
 btn_net_exit.pack()
 #btn_2.pack()
 root.mainloop()
-
