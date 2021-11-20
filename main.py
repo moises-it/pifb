@@ -14,7 +14,7 @@ sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/backup"
 try:
-    config_txt = open('config','r')
+    config_txt = openlines('config','r')
     config = config_txt.read()
     mount_path = (config[0].split("="))[1]
     sshalias = (config[1].split("="))[1]
