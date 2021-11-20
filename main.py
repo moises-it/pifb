@@ -294,7 +294,8 @@ def remote_space_btn():
         cmd_run = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         space_available = cmd_run.communicate()
         print(space_available)
-        tk.messagebox.showinfo(message="There is " + ((int(space_available))/1073742000) + "G available on the remote server.")
+        space = float(space_available)/1073742000
+        tk.messagebox.showinfo(message="There is " + str(space) + "G available on the remote server.")
     except:
         print("Error with checking space on remote server")
 #Network copying
