@@ -23,8 +23,8 @@ try:
 except:
     print("Error with config, using default settings")
     f = open("config", "w")
-    options = ["Mount_Path=" + mount_path + "\n", "SSHalias=" + sshalias + "\n",
-    "RemoteScript=" + remotescript + "\n", "RemotePath=" + remotepath + "\n"]
+    options = ["Mount_Path=" + mount_path, "SSHalias=" + sshalias,
+    "RemoteScript=" + remotescript, "RemotePath=" + remotepath]
     f.writelines(options)
     f.close()
     #except:
