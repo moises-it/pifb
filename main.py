@@ -16,10 +16,11 @@ remotepath = "~/backup"
 try:
     config_txt = open('config','r')
     config = config_txt.readlines()
-    mount_path = (config[0].split("="))[1]
-    sshalias = (config[1].split("="))[1]
-    remotescript = (config[2].split("="))[1]
-    remotepath = (config[3].split("="))[1]
+    #[:-2] removes the \n
+    mount_path = ((config[0].split("="))[1])[:-2]
+    sshalias = ((config[1].split("="))[1])[:-2]
+    remotescript = ((config[2].split("="))[1])[:-2]
+    remotepath = ((config[3].split("="))[1])[:-2]
 except:
     print("Error with config, using default settings")
     f = open("config", "w")
