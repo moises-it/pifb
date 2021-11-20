@@ -295,9 +295,9 @@ def remote_space_btn():
     space_available = cmd_run.communicate()
     print("Space_available ")
     print(space_available)
-    space_gib = str(round((space_available[0])/1073742000, 2))
+    space_gib = (round(int(space_available[0])/1073742000, 2))
     print(space_gib)
-    tk.messagebox.showinfo(message="There is " + str(space) + "G available on the remote server.")
+    tk.messagebox.showinfo(message="There is " + str(space_gib) + "G available on the remote server.")
     print("Error with checking space on remote server")
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
