@@ -26,8 +26,8 @@ except:
         f = open("config", w)
         f.write(["Mount_Path=" + mount_path, "SSHalias=" + sshalias, "RemoteScript=" + remotescript, "RemotePath=" + remotepath])
         f.close()
-    else:
-        print("Config created")
+    except:
+        print("Error with creation")
 #Functions
 
 #Test internet
