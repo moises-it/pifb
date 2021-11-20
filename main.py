@@ -30,7 +30,7 @@ except:
 #Functions
 
 #Test internet
-IPaddress=socket.gethostbyname(socket.gethostname())
+IPaddress = socket.gethostbyname(socket.gethostname())
 def test_net():
     if IPaddress=="127.0.0.1":
         return  False
@@ -304,6 +304,7 @@ btn_net_test_internet = tk.Button(netbtn_groupbox, text="Test Wifi", command=tes
 btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_drive)
 btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
 btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
+btn_net_space = tk.Button(netbtn_groupbox, text="Server Space", command=remote_space_btn)
 btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", fg="BLUE", command=ref_from_to)
 btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=copy_drive)
 
@@ -323,6 +324,7 @@ net_lb.pack()
 btn_net_test_internet.pack()
 btn_net_copy.pack()
 btn_net_refresh.pack()
+btn_net_space.pack()
 btn_net_exit.pack()
 #btn_2.pack()
 root.mainloop()
