@@ -11,7 +11,7 @@ from tkinter import font
 config = []
 mount_path = "/media/pi/"
 sshalias = "fileserver"
-remotescript = "space_check.py"
+remotescript = "space_check"
 remotepath = "~/backup"
 try:
     config_txt = open('config','r')
