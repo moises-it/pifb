@@ -12,7 +12,7 @@ config = []
 mount_path = "/media/pi/"
 sshalias = "fileserver"
 remotescript = "space_check"
-remotepath = "~/backup"
+remotepath = "~/nas/pi-transfer"
 try:
     config_txt = open('config','r')
     config = config_txt.readlines()
@@ -171,7 +171,7 @@ def copy_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
+                            cmd = "rsync -r -v -t -a" + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             universal_newlines=True)
                             out,err = rsync_cmd.communicate()
@@ -264,7 +264,7 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
+                            cmd = "rsync -r -v -t -a" + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, universal_newlines=True)
                             out,err = rsync_cmd.communicate()
