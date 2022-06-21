@@ -157,7 +157,7 @@ def copy_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v -t -a" + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
+                            cmd = "rsync -r -v -t -a" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             universal_newlines=True)
                             out,err = rsync_cmd.communicate()
@@ -250,7 +250,7 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v -t -a" + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
+                            cmd = "rsync -r -v -t -a" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE, universal_newlines=True)
                             out,err = rsync_cmd.communicate()
