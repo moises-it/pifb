@@ -278,9 +278,8 @@ def remote_space_btn():
     cmd = "ssh " + sshalias + " " + remotescript
     cmd_run = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     space_available = cmd_run.communicate()
-    print(space_available)
-    #space_gib = (round(float(space_available[0])/1073742000, 2))
-    #tk.messagebox.showinfo(title="Space",message="There is " + str(space_gib) + "G available on the remote server.")
+    space_gib = (round(float(space_available[0])/1073742000, 2))
+    tk.messagebox.showinfo(title="Space",message="There is " + str(space_gib) + "G available on the remote server.")
     #except:
         #print("Error with connection to remote server")
         #tk.messagebox.showerror(message="Error connecting to remote server")
