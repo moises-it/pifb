@@ -13,21 +13,7 @@ mount_path = "/media/pi/"
 sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
-try:
-    config_txt = open('config','r')
-    config = config_txt.readlines()
-    #[:-2] removes the invisible \n at the end of each option from the config
-    mount_path = ((config[0].split("="))[1])[:-2]
-    sshalias = ((config[1].split("="))[1])[:-2]
-    remotescript = ((config[2].split("="))[1])[:-2]
-    remotepath = ((config[3].split("="))[1])[:-2]
-except:
-    print("Error with config, using default settings")
-    f = open("config", "w")
-    options = ["Mount_Path=" + mount_path, "SSHalias=" + sshalias,
-    "RemoteScript=" + remotescript, "RemotePath=" + remotepath]
-    f.writelines(options)
-    f.close()
+
 #Functions
 
 #Test internet
