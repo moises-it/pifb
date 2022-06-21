@@ -1,1 +1,4 @@
-Mount_Path=/media/pi/SSHalias=fileserverRemoteScript=space_checkRemotePath=~/nas/pi-transfer/
+Mount_Path=/media/pi/
+SSHalias=fileserver
+RemoteScript=space_check
+RemotePath=~/nas/pi-transfer/
