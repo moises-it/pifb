@@ -12,7 +12,7 @@ config = []
 mount_path = "/media/pi/"
 sshalias = "fileserver"
 remotescript = "space_check"
-remotepath = "~/nas/pi-transfer"
+remotepath = "~/nas/pi-transfer/"
 try:
     config_txt = open('config','r')
     config = config_txt.readlines()
