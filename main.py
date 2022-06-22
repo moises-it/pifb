@@ -250,7 +250,7 @@ def net_backup_drive():
 
                         #Rsync section
                         #try:
-                        cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
+                        cmd = "rsync -r -v -t --progress" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
                         #cmd = ['rsync','-v','-a','-r','-t',os.path.join(mount_path,drive_from),(sshalias + ":" + remotepath)]
                         rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE, universal_newlines=True)
