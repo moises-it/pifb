@@ -9,7 +9,7 @@ from tkinter import font
 
 #Config/Default stuff
 config = []
-mount_path = "/media/pi/"
+mount_path = "/media/redux/"
 sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
