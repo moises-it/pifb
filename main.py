@@ -252,7 +252,7 @@ def net_backup_drive():
                         #try:
                         #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
                         cmd = ['rsync','-v','-a','-r','-t',os.path.join(mount_path,drive_from),(sshalias + ":" + remotepath)]
-                        rsync_cmd = subprocess.Popen(cmd, shell=False, stdout=subprocess.PIPE,
+                        rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE, universal_newlines=True)
                         out,err = rsync_cmd.communicate()
                         stdout = open('/tmp/pifb.log', 'w')
