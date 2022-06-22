@@ -250,7 +250,9 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            rsync_exec = subprocess.run(['rsync', '-r', '-t',os.path.join(mount_path,drive_from),sshalias + ":" + remotepath])
+                            to_path = sshalias + ":" + remotepath
+                            print(to_path)
+                            rsync_exec = subprocess.run(['rsync', '-r', '-t',os.path.join(mount_path,drive_from),to_path])
                             stdout = open('log', 'w')
                             stdout.writelines(rsync_exec)
                             stdout.close()
