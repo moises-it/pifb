@@ -250,20 +250,14 @@ def net_backup_drive():
 
                         #Rsync section
                         #try:
-                        to_path = sshalias + ":" + remotepath
-                        print(to_path)
-                        rsync_exec = subprocess.run(['rsync', '-r', '-t','-v',os.path.join(mount_path,drive_from),to_path])
+                        cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
+                        print(cmd)
+                        rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE, universal_newlines=True)
+                        out,err = rsync_cmd.communicate()
                         stdout = open('log', 'w')
-                        stdout.writelines(rsync_exec)
+                        stdout.writelines(out)
                         stdout.close()
-                            #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
-                            #print(cmd)
-                            #rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
-                            #stderr=subprocess.PIPE, universal_newlines=True)
-                            #out,err = rsync_cmd.communicate()
-                            #stdout = open('log', 'w')
-                            #stdout.writelines(out)
-                            #stdout.close()
                         #except:
                             #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open('log', 'r')
