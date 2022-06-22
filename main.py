@@ -250,8 +250,8 @@ def net_backup_drive():
 
                         #Rsync section
                         #try:
-                        #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
-                        cmd = ['rsync','-v','-a','-r','-t',os.path.join(mount_path,drive_from),(sshalias + ":" + remotepath)]
+                        cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
+                        #cmd = ['rsync','-v','-a','-r','-t',os.path.join(mount_path,drive_from),(sshalias + ":" + remotepath)]
                         rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                         stderr=subprocess.PIPE, universal_newlines=True)
                         out,err = rsync_cmd.communicate()
@@ -260,7 +260,7 @@ def net_backup_drive():
                         stdout.close()
                         #except:
                             #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                        verbose = open('log', 'r')
+                        verbose = open('/tmp/pifb.log', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
                             rsync_log_txt.insert(tk.END, line)
