@@ -249,13 +249,13 @@ def net_backup_drive():
                         rsync_log_txt.config(yscrollcommand=scrollbar.set)
 
                         #Rsync section
-                        try:
-                            to_path = sshalias + ":" + remotepath
-                            print(to_path)
-                            rsync_exec = subprocess.run(['rsync', '-r', '-t',os.path.join(mount_path,drive_from),to_path])
-                            stdout = open('log', 'w')
-                            stdout.writelines(rsync_exec)
-                            stdout.close()
+                        #try:
+                        to_path = sshalias + ":" + remotepath
+                        print(to_path)
+                        rsync_exec = subprocess.run(['rsync', '-r', '-t','-v',os.path.join(mount_path,drive_from),to_path])
+                        stdout = open('log', 'w')
+                        stdout.writelines(rsync_exec)
+                        stdout.close()
                             #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + remotepath
                             #print(cmd)
                             #rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
@@ -264,8 +264,8 @@ def net_backup_drive():
                             #stdout = open('log', 'w')
                             #stdout.writelines(out)
                             #stdout.close()
-                        except:
-                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                        #except:
+                            #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open('log', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
