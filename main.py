@@ -10,6 +10,7 @@ from tkinter import font
 
 #Config/Default stuff
 config = []
+#Please add / at the end of directories
 mount_path = "/media/redux/"
 sshalias = "fileserver"
 remotescript = "space_check"
@@ -251,7 +252,10 @@ def net_backup_drive():
                         #Rsync section
                         #try:
                         remote_target = "%s:%s"%(sshalias,remotepath)
-                        from_target = os.path.join(mount_path,drive_from)
+                        mount_path.replace(" ","\ ")
+                        drive_from.replace(" ","\ ")
+                        
+                        from_target = mount_path + drive_from
                         from_fina2 = str(from_target)
                         from_fina2.replace(" ","\ ")
                         cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
