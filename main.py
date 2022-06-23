@@ -250,30 +250,14 @@ def net_backup_drive():
                         rsync_log_txt.config(yscrollcommand=scrollbar.set)
 
                         #Rsync section
-                        #try:
-                        remote_target = "%s:%s"%(sshalias,remotepath)
-                        
-                        from_target = os.path.join(mount_path,drive_from)
-                        from_target = "'" + str(from_target) + "'"
-                        cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
-                        print(cmd)
-                        print("\n")
-                        print(cmd)
-                        subprocess.call(cmd)
-                            #subprocess.call("rsync -r -v -t" + " " + "/media/redux/ISOs\ -\ Driver/" + " " + "fileserver:~/nas/pi-transfer/", shell=True)
-                            #os.system(str("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > logpath"))
-                            #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
-                            #rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
-                            #stderr=subprocess.PIPE, universal_newlines=True)
-                            #out,err = rsync_cmd.communicate()
-                            #stdout = open('logpath', 'w')
-                            #stdout.writelines(out)
-                            #stdout.close()
-                            #stderr = open('/tmp/pifb.error', 'w')
-                            #stderr.writelines(err)
-                            #stderr.close()
-                        #except:
-                            #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                        try:
+                            remote_target = "%s:%s"%(sshalias,remotepath)
+                            from_target = os.path.join(mount_path,drive_from)
+                            from_target = "'" + str(from_target) + "'"
+                            cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
+                            subprocess.call(cmd)
+                        except:
+                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open(logpath, 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
