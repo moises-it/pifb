@@ -318,7 +318,7 @@ refresh_drives(opt_lb)
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
 btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=opt_space)
 btn_opt_format = tk.Button(optbtn_groupbox, text="Format Media", command=opt_format)
-btn_opt_exit = tk.Button(opt_groupbox, text="", command=close_form)
+btn_opt_exit = tk.Button(optbtn_groupbox, text="", command=close_form)
 #packing
 lbl_drive.pack()
 btn_drive_refresh.pack()
