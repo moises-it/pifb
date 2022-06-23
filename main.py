@@ -362,7 +362,7 @@ btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=cop
 
 
 #Optical Drive stuff
-lbl_optical = tk.Label(tab3, text="Create/Mount Filesystem, Then use Drive tab\n to copy files to it then burn", font=('Modern', '20'))
+lbl_optical = tk.Label(tab3, text="1. Create/Mount Filesystem\n2.Then use Drive tab to copy files\n3.Burn", font=('Modern', '12'))
 opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
