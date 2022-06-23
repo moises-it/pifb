@@ -161,7 +161,7 @@ def copy_drive():
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             universal_newlines=True)
                             out,err = rsync_cmd.communicate()
-                            stdout = open('log', 'w')
+                            stdout = open('/tmp/pifb.log', 'w')
                             stdout.writelines(out)
                             stdout.close()
                         except:
@@ -210,7 +210,7 @@ def net_backup_drive():
         else:
 
             continue_yn = True
-            print(int((to_space_available[0])))
+            #print(int((to_space_available[0])))
             if from_space_size > int((to_space_available[0])):
                 msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
                 the destination media, try anyways?", icon="warning")
@@ -274,15 +274,15 @@ def net_backup_drive():
                 tk.messagebox.showinfo(message="Copy aborted.")
     return
 def remote_space_btn():
-    #try:
-    cmd = "ssh " + sshalias + " " + remotescript
-    cmd_run = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    space_available = cmd_run.communicate()
-    space_gib = (round(float(space_available[0])/1073742000, 2))
-    tk.messagebox.showinfo(title="Space",message="There is " + str(space_gib) + "G available on the remote server.")
-    #except:
-        #print("Error with connection to remote server")
-        #tk.messagebox.showerror(message="Error connecting to remote server")
+    try:
+        cmd = "ssh " + sshalias + " " + remotescript
+        cmd_run = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        space_available = cmd_run.communicate()
+        space_gib = (round(float(space_available[0])/1073742000, 2))
+        tk.messagebox.showinfo(title="Space",message="There is " + str(space_gib) + "G available on the remote server.")
+    except:
+        print("Error with connection to remote server")
+        tk.messagebox.showerror(message="Error connecting to remote server")
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
 net_groupbox = tk.LabelFrame(tab2, text="Drives")
@@ -299,6 +299,18 @@ btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", fg="BLUE", command=r
 btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=copy_drive)
 
 
+#Optical Drive stuff
+lbl_optical = tk.Label(tab3, text="Select Drive to backup", font=('Modern', '20'))
+opt_groupbox = tk.LabelFrame(tab3, text="Drives")
+optbtn_groupbox = tk.LabelFrame(tab3)
+opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
+refresh_drives(opt_groupbox)
+
+btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
+btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=opt_space_btn)
+btn_opt_format = tk.Button(optbtn_groupbox, text="Format Media", command=format_opt)
+btn_opt_exit = tk.Button(opt_groupbox, text="", command=close_form)
+#packing
 lbl_drive.pack()
 btn_drive_refresh.pack()
 btn_drive_start.pack(side=tk.BOTTOM)
@@ -311,7 +323,7 @@ lbl_network.pack()
 net_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
 netbtn_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
 net_lb.pack()
-btn_net_test_internet.pack()
+#btn_net_test_internet.pack()
 btn_net_copy.pack()
 btn_net_refresh.pack()
 btn_net_space.pack()
