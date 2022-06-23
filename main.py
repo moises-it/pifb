@@ -15,7 +15,7 @@ mount_path = "/media/redux/"
 sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
-logpath = "logpath"
+logpath = "/tmp/pifb.log"
 #Functions
 
 #Test internet
@@ -254,6 +254,7 @@ def net_backup_drive():
                         remote_target = "%s:%s"%(sshalias,remotepath)
                         
                         from_target = os.path.join(mount_path,drive_from)
+                        from_target = "'" + str(from_target) + "'"
                         cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
                         print(cmd)
                         print("\n")
