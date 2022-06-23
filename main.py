@@ -256,6 +256,9 @@ def net_backup_drive():
                             stdout = open('/tmp/pifb.log', 'w')
                             stdout.writelines(out)
                             stdout.close()
+                            stderr = open('/tmp/pifb.error', 'w')
+                            stderr.writelines(err)
+                            stderr.close()
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open('/tmp/pifb.log', 'r')
