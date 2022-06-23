@@ -249,7 +249,8 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > /tmp/pifb.log"
+                            source_path = os.path.join(drive_from,"")
+                            cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,source_path) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > /tmp/pifb.log"
                             print(cmd)
                             os.system(cmd)
                             #os.system(str("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > /tmp/pifb.log"))
