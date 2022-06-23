@@ -330,7 +330,7 @@ drive_lb.pack()
 
 lbl_optical.pack()
 opt_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
-optbtn_groupbox.pack(side=tk.RIGHT, pax=5, pady=5)
+optbtn_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
 btn_opt_copy.pack()
 btn_opt_space.pack()
 btn_opt_format.pack()
