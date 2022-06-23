@@ -249,7 +249,7 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            remote_target = "%s:%s"(sshalias,remotepath)
+                            remote_target = "%s:%s"%(sshalias,remotepath)
                             from_target = os.path.join(mount_path,drive_from)
                             cmd = "rsync -r -v -t %s %s > /tmp/pifb.log"(from_target,remote_target)
                             subprocess.call(cmd)
