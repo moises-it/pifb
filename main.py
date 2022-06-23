@@ -210,7 +210,6 @@ def net_backup_drive():
         else:
 
             continue_yn = True
-            #print(int((to_space_available[0])))
             if from_space_size > int((to_space_available[0])):
                 msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
                 the destination media, try anyways?", icon="warning")
@@ -283,6 +282,15 @@ def remote_space_btn():
     except:
         print("Error with connection to remote server")
         tk.messagebox.showerror(message="Error connecting to remote server")
+
+#Optical Media Functions
+def opt_format():
+    return
+def opt_backup():
+    return
+def opt_space():
+    return
+
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
 net_groupbox = tk.LabelFrame(tab2, text="Drives")
@@ -307,7 +315,7 @@ opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
 refresh_drives(opt_groupbox)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
-btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=opt_space_btn)
+btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=opt_space)
 btn_opt_format = tk.Button(optbtn_groupbox, text="Format Media", command=format_opt)
 btn_opt_exit = tk.Button(opt_groupbox, text="", command=close_form)
 #packing
@@ -318,6 +326,14 @@ from_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
 to_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
 drive_lb2.pack()
 drive_lb.pack()
+
+lbl_optical.pack()
+opt_groupbox.pack()
+optbtn_groupbox.pack()
+btn_opt_copy.pack()
+btn_opt_space.pack()
+btn_opt_format.pack()
+btn_opt_exit.pack()
 
 lbl_network.pack()
 net_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
