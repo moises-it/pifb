@@ -20,8 +20,8 @@ logpath = "/tmp/pifb.log"
 #/tmp/pifb-bluray.udf /media/redux/Blu-Ray  udf  loop,noauto,user,noatime,nodiratime   0  0
 udf_mount_path = "/media/redux/Blu-Ray/"
 udf_file = "/tmp/pifb-bluray.udf"
+disc_drive = "/dev/sr0"
 #Functions
-
 root = tk.Tk()
 root.attributes("-fullscreen", True)
 root.geometry("480x320")
@@ -134,14 +134,11 @@ def copy_drive():
                             return
 
                         btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
-
                         rsync_log_txt = tk.Text(copy_verbose)
                         rsync_log_txt.pack(side=tk.TOP)
                         rsync_log_txt.place(height=200,width=480)
-
                         scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
                         scrollbar.pack(side=tk.RIGHT, fill="y")
-
                         rsync_log_txt.config(yscrollcommand=scrollbar.set)
 
                         #Rsync section
@@ -197,7 +194,6 @@ def net_backup_drive():
             tk.messagebox.showerror(title="Error!", message="Something went wrong contacting server...")
         #continue rest of code if all is well
         else:
-
             continue_yn = True
             if from_space_size > int((to_space_available[0])):
                 msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
@@ -293,18 +289,46 @@ def opt_udf(command,size):
         except:
             tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
     if command == "delete":
-        try:
-            #Unmounting first if mounted
-            opt_umount(True)
-            os.system("rm %s > %s"%(udf_file,logpath))
-        except:
-            tk.messagebox.showerror(title="Error!", message="Error deleting " + udf_file)
+        #Unmounting first if mounted
+        opt_umount(True)
+        msgbox_cont = tk.messagebox.askquestion(title='Continue?', message="You will lose all data on %s, contuine?"%(udf_file), icon="warning")
+        if msgbox_cont == "no":
+            tk.messagebox.showinfo(title="Aborted!", message="Deletion aborted.")
+        if msgbox_cont == "yes":
+            try:
+                os.system("rm %s > %s"%(udf_file,logpath))
+            except:
+                tk.messagebox.showerror(title="Error!", message="Error deleting " + udf_file)
     if command == "burn":
-        try:
-            opt_umount(True)
-            os.system("umount")
-        except:
-            tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
+        msgbox_cont = tk.messagebox.askquestion(title='Continue?', message="All unused space will be lost, contuine?", icon="warning")
+        if msgbox_cont == "no":
+            tk.messagebox.showinfo(title="Aborted!", message="Burn aborted.")
+        if msgbox_cont == "yes":
+            try:
+                opt_umount(True)
+                os.system("growisofs -speed=1 -Z %s=%s > %s"%(disc_drive,udf_file,logpath))
+                #Verbose
+                def verbose_exit():
+                        copy_verbose.destroy()
+                        return
+                copy_verbose = tk.Tk()
+                copy_verbose.attributes("-fullscreen", True)
+                copy_verbose.geometry("480x320")
+                btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
+                rsync_log_txt = tk.Text(copy_verbose)
+                rsync_log_txt.pack(side=tk.TOP)
+                rsync_log_txt.place(height=200,width=480)
+                scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
+                scrollbar.pack(side=tk.RIGHT, fill="y")
+                rsync_log_txt.config(yscrollcommand=scrollbar.set)
+                verbose = open(logpath, 'r')
+                Lines = verbose.readlines()
+                for line in Lines:
+                    rsync_log_txt.insert(tk.END, line)
+                    rsync_log_txt.see(tk.END)
+                btn_verbose_exit.pack(side=tk.BOTTOM)
+            except:
+                tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
     return
 def opt_format():
     return
