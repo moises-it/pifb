@@ -364,12 +364,12 @@ opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
 opt_lb.pack()
-
+opt_media_size = ""
 opt_rb_groupbox = tk.LabelFrame(tab3, text="Media Size")
-opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=opt_media_value, value="25GB", command=tk.SEL)
-opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=opt_media_value, value="50GB", command=tk.SEL)
-opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=opt_media_value, value="100GB", command=tk.SEL)
-opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=opt_media_value, value="700", command=tk.SEL)
+opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=opt_media_size, value="25GB", command=tk.SEL)
+opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=opt_media_size, value="50GB", command=tk.SEL)
+opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=opt_media_size, value="100GB", command=tk.SEL)
+opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=opt_media_size, value="700", command=tk.SEL)
 refresh_drives(opt_lb)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
