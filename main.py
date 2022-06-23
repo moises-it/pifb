@@ -2,6 +2,7 @@
 import subprocess
 import socket
 import os
+from this import s
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -13,7 +14,7 @@ mount_path = "/media/redux/"
 sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
-
+logpath = "logpath"
 #Functions
 
 #Test internet
@@ -161,7 +162,7 @@ def copy_drive():
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             universal_newlines=True)
                             out,err = rsync_cmd.communicate()
-                            stdout = open('/tmp/pifb.log', 'w')
+                            stdout = open('logpath', 'w')
                             stdout.writelines(out)
                             stdout.close()
                         except:
@@ -251,15 +252,17 @@ def net_backup_drive():
                         #try:
                         remote_target = "%s:%s"%(sshalias,remotepath)
                         from_target = os.path.join(mount_path,drive_from)
-                        cmd = "rsync -r -v -t %s %s > /tmp/pifb.log"%(from_target,remote_target)
+                        from_fina2 = str(from_target)
+                        from_fina2.replace(" ","\ ")
+                        cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
                         subprocess.call(cmd)
                             #subprocess.call("rsync -r -v -t" + " " + "/media/redux/ISOs\ -\ Driver/" + " " + "fileserver:~/nas/pi-transfer/", shell=True)
-                            #os.system(str("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > /tmp/pifb.log"))
+                            #os.system(str("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > logpath"))
                             #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
                             #rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                             #stderr=subprocess.PIPE, universal_newlines=True)
                             #out,err = rsync_cmd.communicate()
-                            #stdout = open('/tmp/pifb.log', 'w')
+                            #stdout = open('logpath', 'w')
                             #stdout.writelines(out)
                             #stdout.close()
                             #stderr = open('/tmp/pifb.error', 'w')
@@ -267,7 +270,7 @@ def net_backup_drive():
                             #stderr.close()
                         #except:
                             #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                        verbose = open('/tmp/pifb.log', 'r')
+                        verbose = open('logpath', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
                             rsync_log_txt.insert(tk.END, line)
