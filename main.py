@@ -257,7 +257,7 @@ def net_backup_drive():
                         
                         from_target = mount_path + drive_from
                         cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
-                        subprocess.call(cmd)
+                        subprocess.call(cmd,shell=True)
                             #subprocess.call("rsync -r -v -t" + " " + "/media/redux/ISOs\ -\ Driver/" + " " + "fileserver:~/nas/pi-transfer/", shell=True)
                             #os.system(str("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > logpath"))
                             #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
