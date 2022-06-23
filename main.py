@@ -370,6 +370,11 @@ opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=opt_media_size
 opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=opt_media_size, value="50GB", command=tk.SEL)
 opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=opt_media_size, value="100GB", command=tk.SEL)
 opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=opt_media_size, value="700", command=tk.SEL)
+#deselect radio buttons
+opt_rb_25.deselect()
+opt_rb_50.deselect()
+opt_rb_100.deselect()
+opt_rb_cd.deselect()
 refresh_drives(opt_lb)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
