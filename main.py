@@ -271,14 +271,14 @@ def remote_space_btn():
 #opt_udf creates udf file system,mounts and burns
 #Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
 
-def opt_umount(silent_yn):
-    try:
-        os.system("umount %s > %s"%(udf_file,logpath))
-    except:
-        if silent_yn == False:
-            tk.messagebox.showerror(title="Error!", message="Something went wrong unmounting " + udf_file)
-    return
 def opt_udf(command,size):
+    def opt_umount(silent_yn):
+        try:
+            os.system("umount %s > %s"%(udf_file,logpath))
+        except:
+            if silent_yn == False:
+                tk.messagebox.showerror(title="Error!", message="Something went wrong unmounting " + udf_file)
+        return
     if command == "format":
         udf_path = os.path.join(mount_path,udf_file)
         udf_path = "'" + str(udf_path) + "'"
@@ -290,6 +290,9 @@ def opt_udf(command,size):
                 os.system("mkudffs %s > %s"%(udf_file,logpath))
         except:
             tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
+    if command == "space":
+        if exists(udf_file):
+            print()
     if command == "delete":
         #Unmounting first if mounted
         opt_umount(True)
@@ -359,7 +362,7 @@ btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=cop
 
 
 #Optical Drive stuff
-lbl_optical = tk.Label(tab3, text="Select Drive to Archive", font=('Modern', '20'))
+lbl_optical = tk.Label(tab3, text="Create/Mount Filesystem, Then use Drive tab\n to copy files to it then burn", font=('Modern', '20'))
 opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
@@ -370,11 +373,6 @@ opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=opt_media_size
 opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=opt_media_size, value="50GB", command=tk.SEL)
 opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=opt_media_size, value="100GB", command=tk.SEL)
 opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=opt_media_size, value="700", command=tk.SEL)
-#deselect radio buttons
-opt_rb_25.deselect()
-opt_rb_50.deselect()
-opt_rb_100.deselect()
-opt_rb_cd.deselect()
 refresh_drives(opt_lb)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
@@ -398,10 +396,8 @@ btn_opt_copy.pack()
 btn_opt_format.pack()
 btn_opt_exit.pack()
 opt_rb_groupbox.pack(side=tk.LEFT, padx=20, pady=5)
-opt_rb_cd.pack()
-opt_rb_25.pack()
-opt_rb_50.pack()
-opt_rb_100.pack()
+opt_rb_cd.pack(),opt_rb_25.pack(),opt_rb_50.pack(),opt_rb_100.pack()
+opt_rb_cd.deselect,opt_rb_25.deselect,opt_rb_50.deselect(),opt_rb_100.deselect()
 
 lbl_network.pack()
 net_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
