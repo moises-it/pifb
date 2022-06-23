@@ -2,7 +2,7 @@
 import subprocess
 import socket
 import os
-from this import s
+#from this import s
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
