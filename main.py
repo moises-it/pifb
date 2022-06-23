@@ -269,6 +269,8 @@ def remote_space_btn():
 
 #Optical Media Functions
 #opt_udf creates udf file system,mounts and burns
+#Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
+
 def opt_umount(silent_yn):
     try:
         os.system("umount %s > %s"%(udf_file,logpath))
@@ -277,7 +279,7 @@ def opt_umount(silent_yn):
             tk.messagebox.showerror(title="Error!", message="Something went wrong unmounting " + udf_file)
     return
 def opt_udf(command,size):
-    if command == "truncate":
+    if command == "format":
         udf_path = os.path.join(mount_path,udf_file)
         udf_path = "'" + str(udf_path) + "'"
         try:
@@ -331,6 +333,10 @@ def opt_udf(command,size):
                 tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
     return
 def opt_format():
+    opt_udf("format")
+    return
+def opt_delete():
+    opt_udf()
     return
 def opt_backup():
     return
@@ -358,6 +364,12 @@ opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
 opt_lb.pack()
+
+opt_rb_groupbox = tk.LabelFrame(tab3, text="Media Size")
+opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=tk.VAR, value=1, command=tk.SEL)
+opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=tk.VAR, value=2, command=tk.SEL)
+opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=tk.VAR, value=3, command=tk.SEL)
+opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=tk.VAR, value=4, command=tk.SEL)
 refresh_drives(opt_lb)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
@@ -374,18 +386,22 @@ drive_lb2.pack()
 drive_lb.pack()
 
 lbl_optical.pack()
-opt_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
+#opt_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
 optbtn_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
 btn_opt_space.pack()
 btn_opt_copy.pack()
 btn_opt_format.pack()
 btn_opt_exit.pack()
+opt_rb_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
+opt_rb_cd.pack()
+opt_rb_25.pack()
+opt_rb_50.pack()
+opt_rb_100.pack()
 
 lbl_network.pack()
 net_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
 netbtn_groupbox.pack(side=tk.RIGHT, padx=5, pady=5)
 net_lb.pack()
-#btn_net_test_internet.pack()
 btn_net_copy.pack()
 btn_net_refresh.pack()
 btn_net_space.pack()
