@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from cmath import log
 import subprocess
 import socket
 import os
@@ -272,6 +273,13 @@ def remote_space_btn():
 
 #Optical Media Functions
 #opt_udf creates udf file system,mounts and burns
+def opt_umount(silent_yn):
+    try:
+        os.system("umount %s > %s"%(udf_file,logpath))
+    except:
+        if silent_yn == False:
+            tk.messagebox.showerror(title="Error!", message="Something went wrong unmounting " + udf_file)
+    return
 def opt_udf(command,size):
     if command == "truncate":
         udf_path = os.path.join(mount_path,udf_file)
@@ -284,29 +292,17 @@ def opt_udf(command,size):
                 os.system("mkudffs %s > %s"%(udf_file,logpath))
         except:
             tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
-    if command == "mount":
-        try:
-            os.system("mount %s > %s"%(udf_file,logpath))
-        except:
-            tk.messagebox.showerror(title="Error!", message=("Eror mounting " + udf_file))
-    if command == "umount":
-        try:
-            os.system("umount %s > %s"%(udf_file,logpath))
-        except:
-            tk.messagebox.showerror(title="Error!", message="Error unmounting " + udf_file)
     if command == "delete":
         try:
             #Unmounting first if mounted
-            try:
-                os.system("umount %s > %s"%(udf_file,logpath))
-            except:
-                print("Exception during unmounting, might have not even been mounted...")
+            opt_umount(True)
             os.system("rm %s > %s"%(udf_file,logpath))
         except:
             tk.messagebox.showerror(title="Error!", message="Error deleting " + udf_file)
     if command == "burn":
         try:
-            os.system("")
+            opt_umount(True)
+            os.system("umount")
         except:
             tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
     return
