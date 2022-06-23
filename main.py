@@ -249,17 +249,16 @@ def net_backup_drive():
                         rsync_log_txt.config(yscrollcommand=scrollbar.set)
 
                         #Rsync section
-                        #try:
-                        cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
-                        #cmd = ['rsync','-v','-a','-r','-t',os.path.join(mount_path,drive_from),(sshalias + ":" + remotepath)]
-                        rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE, universal_newlines=True)
-                        out,err = rsync_cmd.communicate()
-                        stdout = open('/tmp/pifb.log', 'w')
-                        stdout.writelines(out)
-                        stdout.close()
-                        #except:
-                            #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                        try:
+                            cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
+                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, universal_newlines=True)
+                            out,err = rsync_cmd.communicate()
+                            stdout = open('/tmp/pifb.log', 'w')
+                            stdout.writelines(out)
+                            stdout.close()
+                        except:
+                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open('/tmp/pifb.log', 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
