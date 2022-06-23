@@ -255,7 +255,7 @@ def net_backup_drive():
                             from_target = os.path.join(mount_path,drive_from)
                             from_target = "'" + str(from_target) + "'"
                             cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
-                            subprocess.call(cmd)
+                            subprocess.call(cmd,shell=True)
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open(logpath, 'r')
