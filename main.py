@@ -308,7 +308,7 @@ btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=cop
 
 
 #Optical Drive stuff
-lbl_optical = tk.Label(tab3, text="Select Drive to backup", font=('Modern', '20'))
+lbl_optical = tk.Label(tab3, text="Select Drive to Archive", font=('Modern', '20'))
 opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
