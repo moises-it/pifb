@@ -163,7 +163,7 @@ def copy_drive():
                             rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                             universal_newlines=True)
                             out,err = rsync_cmd.communicate()
-                            stdout = open('logpath', 'w')
+                            stdout = open(logpath, 'w')
                             stdout.writelines(out)
                             stdout.close()
                         except:
@@ -172,7 +172,7 @@ def copy_drive():
                         #Start rsync on seperate thread to allow output to log while user waits
                         #thread1 = thread.start_new_thread(rsync, ())
 
-                        verbose = open('log', 'r')
+                        verbose = open(logpath, 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
                             rsync_log_txt.insert(tk.END, line)
@@ -274,7 +274,7 @@ def net_backup_drive():
                             #stderr.close()
                         #except:
                             #tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                        verbose = open('logpath', 'r')
+                        verbose = open(logpath, 'r')
                         Lines = verbose.readlines()
                         for line in Lines:
                             rsync_log_txt.insert(tk.END, line)
