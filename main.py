@@ -313,7 +313,7 @@ opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
 opt_lb.pack()
-refresh_drives(opt_groupbox)
+refresh_drives(opt_lb)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
 btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=opt_space)
