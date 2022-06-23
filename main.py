@@ -271,7 +271,7 @@ def remote_space_btn():
 #opt_udf creates udf file system,mounts and burns
 #Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
 
-def opt_udf(command,size):
+def opt_udf(command):
     def opt_umount(silent_yn):
         try:
             os.system("umount %s > %s"%(udf_file,logpath))
@@ -279,17 +279,25 @@ def opt_udf(command,size):
             if silent_yn == False:
                 tk.messagebox.showerror(title="Error!", message="Something went wrong unmounting " + udf_file)
         return
+    #Checks if radio button is selected
+    def check_media_size():
+        if opt_media_size == "":
+            return False
+        return True
     if command == "format":
-        udf_path = os.path.join(mount_path,udf_file)
-        udf_path = "'" + str(udf_path) + "'"
-        try:
-            if exists(udf_file):
-                tk.messagebox.showerror(title="Error!", message="A udf file system already exists, back up to it and burn or delete.")
-            else:
-                os.system("truncate --size=%s %s > %s"%(size,udf_path,logpath))
-                os.system("mkudffs %s > %s"%(udf_file,logpath))
-        except:
-            tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
+        if check_media_size():
+            udf_path = os.path.join(mount_path,udf_file)
+            udf_path = "'" + str(udf_path) + "'"
+            try:
+                if exists(udf_file):
+                    tk.messagebox.showerror(title="Error!", message="A udf file system already exists, back up to it and burn or delete.")
+                else:
+                    os.system("truncate --size=%s %s > %s"%(opt_media_size,udf_path,logpath))
+                    os.system("mkudffs %s > %s"%(udf_file,logpath))
+            except:
+                tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
+        else:
+            tk.messagebox.showerror(title="Error!", message="Select Media Size!")
     if command == "space":
         if exists(udf_file):
             print()
@@ -397,7 +405,6 @@ btn_opt_format.pack()
 btn_opt_exit.pack()
 opt_rb_groupbox.pack(side=tk.LEFT, padx=20, pady=5)
 opt_rb_cd.pack(),opt_rb_25.pack(),opt_rb_50.pack(),opt_rb_100.pack()
-print(opt_media_size)
 
 lbl_network.pack()
 net_groupbox.pack(side=tk.LEFT, padx=5, pady=5)
