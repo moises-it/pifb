@@ -281,11 +281,34 @@ def opt_udf(command,size):
                 tk.messagebox.showerror(title="Error!", message="A udf file system already exists, back up to it and burn or delete.")
             else:
                 os.system("truncate --size=%s %s > %s"%(size,udf_path,logpath))
-                os.system("mkudffs %s"%(udf_file))
+                os.system("mkudffs %s > %s"%(udf_file,logpath))
         except:
             tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
     if command == "mount":
-        os.system("")
+        try:
+            os.system("mount %s > %s"%(udf_file,logpath))
+        except:
+            tk.messagebox.showerror(title="Error!", message=("Eror mounting " + udf_file))
+    if command == "umount":
+        try:
+            os.system("umount %s > %s"%(udf_file,logpath))
+        except:
+            tk.messagebox.showerror(title="Error!", message="Error unmounting " + udf_file)
+    if command == "delete":
+        try:
+            #Unmounting first if mounted
+            try:
+                os.system("umount %s > %s"%(udf_file,logpath))
+            except:
+                print("Exception during unmounting, might have not even been mounted...")
+            os.system("rm %s > %s"%(udf_file,logpath))
+        except:
+            tk.messagebox.showerror(title="Error!", message="Error deleting " + udf_file)
+    if command == "burn":
+        try:
+            os.system("")
+        except:
+            tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
     return
 def opt_format():
     return
