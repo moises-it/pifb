@@ -312,6 +312,7 @@ lbl_optical = tk.Label(tab3, text="Select Drive to backup", font=('Modern', '20'
 opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
+opt_lb.pack()
 refresh_drives(opt_groupbox)
 
 btn_opt_copy = tk.Button(optbtn_groupbox, text="Backup", command=opt_backup)
