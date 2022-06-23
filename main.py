@@ -1,8 +1,8 @@
-#!/usr/bin/pytho
+#!/usr/bin/python
 import subprocess
 import socket
 import os
-#from this import s
+from os.path import exists
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -10,29 +10,16 @@ from tkinter import font
 
 #Config/Default stuff
 config = []
-#Please add / at the end of directories
 mount_path = "/media/redux/"
 sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
 logpath = "/tmp/pifb.log"
+#This added to /etc/fstab to avoid the use of sudo
+#/tmp/pifb-bluray.udf /media/redux/Blu-Ray  udf  loop,noauto,user,noatime,nodiratime   0  0
+udf_mount_path = "/media/redux/Blu-Ray/"
+udf_file = "/tmp/pifb-bluray.udf"
 #Functions
-
-#Test internet
-netipaddress = socket.gethostbyname(socket.gethostname())
-def test_net():
-    if netipaddress=="127.0.0.1":
-        return  False
-    else:
-        return True
-
-#Test internet and display messagebox
-def test_net_gui():
-    if test_net():
-        tk.messagebox.showinfo(title="Success!",message="Connected to the network")
-    else:
-        tk.messagebox.showerror(title="No Network",message="Not connected to the internet")
-    return
 
 root = tk.Tk()
 root.attributes("-fullscreen", True)
@@ -62,7 +49,6 @@ tab1_btn_exit = tk.Button(tab1, text="Exit", command=close_form)
 
 #Drive Tab
 lbl_drive = tk.Label(tab1, text="Select Drives To Transfer", font=('Modern', '20'))
-
 
 drives = os.listdir(os.path.join("", mount_path))
 drive_path = []
@@ -283,7 +269,24 @@ def remote_space_btn():
         print("Error with connection to remote server")
         tk.messagebox.showerror(message="Error connecting to remote server")
 
+
 #Optical Media Functions
+#opt_udf creates udf file system,mounts and burns
+def opt_udf(command,size):
+    if command == "truncate":
+        udf_path = os.path.join(mount_path,udf_file)
+        udf_path = "'" + str(udf_path) + "'"
+        try:
+            if exists(udf_file):
+                tk.messagebox.showerror(title="Error!", message="A udf file system already exists, back up to it and burn or delete.")
+            else:
+                os.system("truncate --size=%s %s > %s"%(size,udf_path,logpath))
+                os.system("mkudffs %s"%(udf_file))
+        except:
+            tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
+    if command == "mount":
+        os.system("")
+    return
 def opt_format():
     return
 def opt_backup():
@@ -298,7 +301,6 @@ netbtn_groupbox = tk.LabelFrame(tab2)
 net_lb = tk.Listbox(net_groupbox, selectmode=tk.SINGLE, exportselection=0)
 #initial drive refresh for net_lb (listbox)
 refresh_drives(net_lb)
-btn_net_test_internet = tk.Button(netbtn_groupbox, text="Test Wifi", command=test_net_gui)
 btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_drive)
 btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
 btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
