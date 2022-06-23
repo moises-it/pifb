@@ -249,16 +249,17 @@ def net_backup_drive():
 
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
-                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE, universal_newlines=True)
-                            out,err = rsync_cmd.communicate()
-                            stdout = open('/tmp/pifb.log', 'w')
-                            stdout.writelines(out)
-                            stdout.close()
-                            stderr = open('/tmp/pifb.error', 'w')
-                            stderr.writelines(err)
-                            stderr.close()
+                            os.system("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > /tmp/pifb.log")
+                            #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
+                            #rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+                            #stderr=subprocess.PIPE, universal_newlines=True)
+                            #out,err = rsync_cmd.communicate()
+                            #stdout = open('/tmp/pifb.log', 'w')
+                            #stdout.writelines(out)
+                            #stdout.close()
+                            #stderr = open('/tmp/pifb.error', 'w')
+                            #stderr.writelines(err)
+                            #stderr.close()
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                         verbose = open('/tmp/pifb.log', 'r')
