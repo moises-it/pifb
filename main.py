@@ -253,9 +253,10 @@ def net_backup_drive():
                         #try:
                         remote_target = "%s:%s"%(sshalias,remotepath)
                         mount_path.replace(" ","\ ")
-                        drive_from.replace(" ","\ ")
+                        yeet = str(drive_from)
+                        yeet.replace(" ","\ ")
                         
-                        from_target = mount_path + drive_from
+                        from_target = mount_path + yeet
                         cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
                         print(cmd)
                         print("\n")
