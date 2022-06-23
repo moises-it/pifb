@@ -255,7 +255,7 @@ def net_backup_drive():
                             #print(cmd)
                             alias_remotepath = sshalias + ":" + remotepath
                             
-                            subprocess.call(['rsync','-r','-v','-t',"/media/redux/ISOs\ -\ Driver/",alias_remotepath,">","/tmp/pifb.log"])
+                            subprocess.call(['rsync','-r','-v','-t',"/media/redux/ISOs\ -\ Driver/",sshalias + ":" + remotepath,">","/tmp/pifb.log"])
                             #os.system(str("rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"") + " > /tmp/pifb.log"))
                             #cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + sshalias + ":" + os.path.join(remotepath,"")
                             #rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
