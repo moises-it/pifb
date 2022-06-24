@@ -273,22 +273,23 @@ def remote_space_btn():
 #Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
 opt_rb_groupbox = tk.LabelFrame(tab3, text="Media Size")
 opt_media_var = tk.IntVar(opt_rb_groupbox)
-opt_media_size = ""
+
 def opt_rb_sel():
     selection = opt_media_var.get()
     if selection == 1:
-        opt_media_size = "25GB"
+        return("25GB")
     if selection == 2:
-        opt_media_size = "50GB"
+        return("50GB")
     if selection == 3:
-        opt_media_size == "100GB"
+        return("100GB")
     if selection == 4:
-        opt_media_size = "700MB"
+        return("700MB")
     else:
-        opt_media_size == ""
+        return("")
     return
+opt_media_size = ""
 def opt_udf(command):
-    opt_rb_sel()
+    opt_media_size = opt_rb_sel()
     def opt_umount(silent_yn):
         try:
             os.system("umount %s > %s"%(udf_file,logpath))
