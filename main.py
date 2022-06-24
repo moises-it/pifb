@@ -283,7 +283,8 @@ def opt_udf(command):
     def check_media_size():
         if opt_media_size == "":
             return False
-        return True
+        else:
+            return True
     if command == "mount":
         if exists(udf_file):
             try:
