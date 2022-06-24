@@ -338,7 +338,8 @@ def opt_udf(command):
                 opt_udf("mount")
             from_path = udf_mount_path
             from_stat = os.statvfs(from_path)
-            from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
+            #from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
+            from_space_size = from_stat.f_frsize * from_stat.f_bfree
             from_space_size_gib = from_space_size / 1073741824
             tk.messagebox.showinfo(title="Space", message="There is %s available."%(from_space_size_gib))
     if command == "delete":
