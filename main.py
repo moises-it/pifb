@@ -416,7 +416,8 @@ btn_opt_burn = tk.Button(optbtn_groupbox, text="Backup", command=lambda:opt_udf(
 btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=lambda:opt_udf("space"))
 btn_opt_format = tk.Button(optbtn_groupbox, text="Format Media", command=lambda:opt_udf("format"))
 btn_opt_mount = tk.Button(optbtn_groupbox, text="Mount", command=lambda:opt_udf("mount"))
-btn_opt_unmount = tk.Button(optbtn_groupbox, text="Mount", command=lambda:opt_udf("unmount"))
+btn_opt_unmount = tk.Button(optbtn_groupbox, text="Unmount", command=lambda:opt_udf("unmount"))
+btn_opt_delete = tk.Button(optbtn_groupbox, text="Unmount", command=lambda:opt_udf("delete"))
 btn_opt_exit = tk.Button(optbtn_groupbox, text="Exit", command=close_form)
 #packing
 lbl_drive.pack()
