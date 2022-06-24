@@ -17,6 +17,7 @@ sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
 logpath = "/tmp/pifb.log"
+tmp_bash = "/tmp/cmd.sh"
 #This added to /etc/fstab to avoid the use of sudo
 #/tmp/pifb-bluray.udf /media/redux/Blu-Ray  udf  loop,noauto,user,noatime,nodiratime   0  0
 udf_mount_path = "/media/redux/Blu-Ray/"
@@ -66,8 +67,13 @@ drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
 
 #Opens terminal and runs the command to show large operations
 def run_cmd(cmd):
-    print("lxterminal -e \"%s\"; read x"%(cmd))
-    os.system("lxterminal -e \"%s\"; read x"%(cmd))
+    try:
+        f = open(tmp_bash,"w")
+        f.write(cmd)
+        f.close()
+        os.system("lxterminal -e \"bash %s\" ; read x"%(tmp_bash))
+    except:
+        tk.messagebox.showerror(title="Error",message="Couldn't make temp file in %s, needed for core functionality"%(tmp_bash))
     return
 def refresh_drives(listboxlb):
     listboxlb.delete('0', 'end')
