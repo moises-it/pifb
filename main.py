@@ -331,31 +331,34 @@ def opt_udf(command):
         if msgbox_cont == "no":
             tk.messagebox.showinfo(title="Aborted!", message="Burn aborted.")
         if msgbox_cont == "yes":
-            try:
-                opt_umount(True)
-                os.system("growisofs -speed=1 -Z %s=%s > %s"%(disc_drive,udf_file,logpath))
-                #Verbose
-                def verbose_exit():
-                        copy_verbose.destroy()
-                        return
-                copy_verbose = tk.Tk()
-                copy_verbose.attributes("-fullscreen", True)
-                copy_verbose.geometry("480x320")
-                btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
-                rsync_log_txt = tk.Text(copy_verbose)
-                rsync_log_txt.pack(side=tk.TOP)
-                rsync_log_txt.place(height=200,width=480)
-                scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
-                scrollbar.pack(side=tk.RIGHT, fill="y")
-                rsync_log_txt.config(yscrollcommand=scrollbar.set)
-                verbose = open(logpath, 'r')
-                Lines = verbose.readlines()
-                for line in Lines:
-                    rsync_log_txt.insert(tk.END, line)
-                    rsync_log_txt.see(tk.END)
-                btn_verbose_exit.pack(side=tk.BOTTOM)
-            except:
-                tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
+            if exists(udf_file):
+                try:
+                    opt_umount(True)
+                    os.system("growisofs -speed=1 -Z %s=%s > %s"%(disc_drive,udf_file,logpath))
+                    #Verbose
+                    def verbose_exit():
+                            copy_verbose.destroy()
+                            return
+                    copy_verbose = tk.Tk()
+                    copy_verbose.attributes("-fullscreen", True)
+                    copy_verbose.geometry("480x320")
+                    btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
+                    rsync_log_txt = tk.Text(copy_verbose)
+                    rsync_log_txt.pack(side=tk.TOP)
+                    rsync_log_txt.place(height=200,width=480)
+                    scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
+                    scrollbar.pack(side=tk.RIGHT, fill="y")
+                    rsync_log_txt.config(yscrollcommand=scrollbar.set)
+                    verbose = open(logpath, 'r')
+                    Lines = verbose.readlines()
+                    for line in Lines:
+                        rsync_log_txt.insert(tk.END, line)
+                        rsync_log_txt.see(tk.END)
+                    btn_verbose_exit.pack(side=tk.BOTTOM)
+                except:
+                    tk.messagebox.showerror(title="Error!", message="Something went wrong burning")
+            else:
+                tk.messagebox.showerror(title="Error!", message="There is nothing to burn")
     return
 def opt_format():
     opt_udf("format")
