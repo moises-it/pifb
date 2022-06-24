@@ -270,6 +270,8 @@ def remote_space_btn():
 #Optical Media Functions
 #opt_udf creates udf file system,mounts and burns
 #Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
+
+opt_media_size = ""
 def opt_rb_sel():
     opt_media_size = str(opt_media_size.get)
     return
@@ -364,16 +366,6 @@ def opt_udf(command):
             else:
                 tk.messagebox.showerror(title="Error!", message="There is nothing to burn")
     return
-def opt_format():
-    opt_udf("format")
-    return
-def opt_delete():
-    opt_udf()
-    return
-def opt_backup():
-    return
-def opt_space():
-    return
 
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
@@ -396,7 +388,6 @@ opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
 opt_lb.pack()
-opt_media_size = ""
 opt_rb_groupbox = tk.LabelFrame(tab3, text="Media Size")
 opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=opt_media_size, value="25GB", command=opt_rb_sel)
 opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=opt_media_size, value="50GB", command=tk.SEL)
