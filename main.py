@@ -70,8 +70,9 @@ def run_cmd(cmd):
     try:
         f = open(tmp_bash,"w")
         f.write(cmd)
+        f.write("\nread x")
         f.close()
-        os.system("lxterminal -e \"bash %s\" ; read x"%(tmp_bash))
+        os.system("lxterminal -e \"bash %s\""%(tmp_bash))
     except:
         tk.messagebox.showerror(title="Error",message="Couldn't make temp file in %s, needed for core functionality"%(tmp_bash))
     return
