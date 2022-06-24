@@ -343,16 +343,19 @@ def opt_udf(command):
             tk.messagebox.showinfo(title="Space", message="There is %s available."%(from_space_size_gib))
     if command == "delete":
         #Unmounting first if mounted
-        opt_umount(True)
-        msgbox_cont = tk.messagebox.askquestion(title='Continue?', message="You will lose all data on %s, contuine?"%(udf_file), icon="warning")
-        if msgbox_cont == "no":
-            tk.messagebox.showinfo(title="Aborted!", message="Deletion aborted.")
-        if msgbox_cont == "yes":
-            try:
-                os.system("rm %s > %s"%(udf_file,logpath))
-                tk.messagebox.showinfo(title="Done", message="%s deleted!"%(udf_file))
-            except:
-                tk.messagebox.showerror(title="Error!", message="Error deleting " + udf_file)
+        if exists(udf_file):
+            opt_umount(True)
+            msgbox_cont = tk.messagebox.askquestion(title='Continue?', message="You will lose all data on %s, contuine?"%(udf_file), icon="warning")
+            if msgbox_cont == "no":
+                tk.messagebox.showinfo(title="Aborted!", message="Deletion aborted.")
+            if msgbox_cont == "yes":
+                try:
+                    os.system("rm %s > %s"%(udf_file,logpath))
+                    tk.messagebox.showinfo(title="Done", message="%s deleted!"%(udf_file))
+                except:
+                    tk.messagebox.showerror(title="Error!", message="Error deleting " + udf_file)
+        else:
+            tk.messagebox.showerror(title="Error!",message="%s doesn't exist, nothing to delete."%(udf_file))
     if command == "burn":
         msgbox_cont = tk.messagebox.askquestion(title='Continue?', message="All unused space will be lost, contuine?", icon="warning")
         if msgbox_cont == "no":
@@ -420,7 +423,7 @@ btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=lambda:op
 btn_opt_format = tk.Button(optbtn_groupbox, text="Format Media", command=lambda:opt_udf("format"))
 btn_opt_mount = tk.Button(optbtn_groupbox, text="Mount", command=lambda:opt_udf("mount"))
 btn_opt_unmount = tk.Button(optbtn_groupbox, text="Unmount", command=lambda:opt_udf("unmount"))
-btn_opt_delete = tk.Button(optbtn_groupbox, text="Unmount", command=lambda:opt_udf("delete"))
+btn_opt_delete = tk.Button(optbtn_groupbox, text="Delete", command=lambda:opt_udf("delete"))
 btn_opt_exit = tk.Button(optbtn_groupbox, text="Exit", command=close_form)
 #packing
 lbl_drive.pack()
