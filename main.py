@@ -70,6 +70,7 @@ def run_cmd(cmd):
     try:
         f = open(tmp_bash,"w")
         f.write(cmd)
+        f.write("\necho \"Transfer complete, close this window...\"")
         f.write("\nread x")
         f.close()
         os.system("lxterminal -e \"bash %s\""%(tmp_bash))
