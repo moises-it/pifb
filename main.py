@@ -324,6 +324,7 @@ def opt_udf(command):
             except:
                 tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
         else:
+            print(opt_media_size)
             tk.messagebox.showerror(title="Error!", message="Select Media Size!")
     if command == "space":
         if exists(udf_file):
