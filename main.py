@@ -288,6 +288,7 @@ def opt_rb_sel():
         opt_media_size == ""
     return
 def opt_udf(command):
+    opt_rb_sel()
     def opt_umount(silent_yn):
         try:
             os.system("umount %s > %s"%(udf_file,logpath))
