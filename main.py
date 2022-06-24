@@ -272,7 +272,7 @@ def remote_space_btn():
 #opt_udf creates udf file system,mounts and burns
 #Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
 
-opt_media_var = IntVar()
+opt_media_var = 5
 opt_media_size = ""
 def opt_rb_sel():
     selection = opt_media_var.get()
