@@ -66,7 +66,7 @@ drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
 
 #Opens terminal and runs the command to show large operations
 def run_cmd(cmd):
-    os.system("lxterminal -e \"%s\"")
+    os.system("lxterminal -e \"%s\"; read x"%(cmd))
     return
 def refresh_drives(listboxlb):
     listboxlb.delete('0', 'end')
