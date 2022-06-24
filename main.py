@@ -64,6 +64,10 @@ to_groupbox = tk.LabelFrame(tab1, text="To")
 drive_lb = tk.Listbox(from_groupbox, selectmode=tk.SINGLE, exportselection=0)
 drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
 
+#Opens terminal and runs the command to show large operations
+def run_cmd(cmd):
+    os.system("lxterminal -e \"%s\"")
+    return
 def refresh_drives(listboxlb):
     listboxlb.delete('0', 'end')
     drives = os.listdir(os.path.join("", mount_path))
@@ -195,14 +199,10 @@ def net_backup_drive():
             tk.messagebox.showerror(title="Error!", message="Something went wrong contacting server...")
         #continue rest of code if all is well
         else:
-            continue_yn = True
             if from_space_size > int((to_space_available[0])):
                 msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
                 the destination media, try anyways?", icon="warning")
-                if msgbox_space == 'no':
-                    continue_yn = False
-
-            if continue_yn:
+            if msgbox_space == "yes":
                 copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to Server?"
                 copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
 
@@ -212,47 +212,16 @@ def net_backup_drive():
                     #update label
                     lbl_network.config(text="Do not remove/move media!", fg="RED")
                     tk.messagebox.showwarning(message="Do not remove/move media!")
-                    def rsync_copy():
-                        #Create new window with verbose
-                        copy_verbose = tk.Tk()
-                        copy_verbose.attributes("-fullscreen", True)
-                        copy_verbose.geometry("480x320")
-
-                        #add exit button
-                        def verbose_exit():
-                            copy_verbose.destroy()
-                            return
-
-                        btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
-
-                        rsync_log_txt = tk.Text(copy_verbose)
-                        rsync_log_txt.pack(side=tk.TOP)
-                        rsync_log_txt.place(height=200,width=480)
-
-                        scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
-                        scrollbar.pack(side=tk.RIGHT, fill="y")
-                        rsync_log_txt.config(yscrollcommand=scrollbar.set)
-
-                        #Rsync section
-                        try:
-                            remote_target = "%s:%s"%(sshalias,remotepath)
-                            from_target = os.path.join(mount_path,drive_from)
-                            from_target = "'" + str(from_target) + "'"
-                            cmd = "rsync -rvt %s %s > %s"%(from_target,remote_target,logpath)
-                            subprocess.call(cmd,shell=True)
-                        except:
-                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                        verbose = open(logpath, 'r')
-                        Lines = verbose.readlines()
-                        for line in Lines:
-                            rsync_log_txt.insert(tk.END, line)
-                            rsync_log_txt.see(tk.END)
-                            #Add exit button when finished copying
-                        btn_verbose_exit.pack(side=tk.BOTTOM)
-
-                        lbl_network.config(text="Copied!", fg="GREEN")
-                        return
-                    rsync_copy()
+                    #Rsync section
+                    try:
+                        remote_target = "%s:%s"%(sshalias,remotepath)
+                        from_target = os.path.join(mount_path,drive_from)
+                        from_target = "'" + str(from_target) + "'"
+                        run_cmd("rsync -rvt %s %s > %s"%(from_target,remote_target,logpath))
+                    except:
+                        tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                    lbl_network.config(text="Copied!", fg="GREEN")
+                    return
             else:
                 tk.messagebox.showinfo(message="Copy aborted.")
     return
@@ -266,7 +235,6 @@ def remote_space_btn():
     except:
         print("Error with connection to remote server")
         tk.messagebox.showerror(message="Error connecting to remote server")
-
 
 #Optical Media Functions
 #opt_udf creates udf file system,mounts and burns
@@ -408,7 +376,6 @@ btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
 btn_net_space = tk.Button(netbtn_groupbox, text="Server Space", command=remote_space_btn)
 btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", fg="BLUE", command=ref_from_to)
 btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=copy_drive)
-
 
 #Optical Drive stuff
 lbl_optical = tk.Label(tab3, text="1. Create/Mount Filesystem\n2.Then use Drive tab to copy files\n3.Burn", font=('Modern', '12'))
