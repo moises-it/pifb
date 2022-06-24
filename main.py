@@ -16,6 +16,7 @@ mount_path = "/media/redux/"
 sshalias = "fileserver"
 remotescript = "space_check"
 remotepath = "~/nas/pi-transfer/"
+#Errors go to logpath, live output goes to terminal that opens when running an transfer operation
 logpath = "/tmp/pifb.log"
 tmp_bash = "/tmp/cmd.sh"
 #This added to /etc/fstab to avoid the use of sudo
@@ -135,47 +136,12 @@ def copy_drive():
                     lbl_drive.config(text="Do not remove/move media!", fg="RED")
                     tk.messagebox.showwarning(message="Do not remove/move media!")
                     def rsync_copy():
-                        #Create new window with verbose
-                        copy_verbose = tk.Tk()
-                        copy_verbose.attributes("-fullscreen", True)
-                        copy_verbose.geometry("480x320")
-
-                        #add exit button
-                        def verbose_exit():
-                            copy_verbose.destroy()
-                            return
-
-                        btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
-                        rsync_log_txt = tk.Text(copy_verbose)
-                        rsync_log_txt.pack(side=tk.TOP)
-                        rsync_log_txt.place(height=200,width=480)
-                        scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
-                        scrollbar.pack(side=tk.RIGHT, fill="y")
-                        rsync_log_txt.config(yscrollcommand=scrollbar.set)
-
                         #Rsync section
                         try:
-                            cmd = "rsync -r -v -t" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
-                            rsync_cmd = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                            universal_newlines=True)
-                            out,err = rsync_cmd.communicate()
-                            stdout = open(logpath, 'w')
-                            stdout.writelines(out)
-                            stdout.close()
+                            cmd = "rsync -rvt --progress" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
+                            run_cmd(cmd)
                         except:
                             tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-
-                        #Start rsync on seperate thread to allow output to log while user waits
-                        #thread1 = thread.start_new_thread(rsync, ())
-
-                        verbose = open(logpath, 'r')
-                        Lines = verbose.readlines()
-                        for line in Lines:
-                            rsync_log_txt.insert(tk.END, line)
-                            rsync_log_txt.see(tk.END)
-                        #Add exit button when finished copying
-                        btn_verbose_exit.pack(side=tk.BOTTOM)
-
                         lbl_drive.config(text="Copied!", fg="GREEN")
                         return
                     rsync_copy()
