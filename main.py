@@ -202,26 +202,26 @@ def net_backup_drive():
             if from_space_size > int((to_space_available[0])):
                 msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
                 the destination media, try anyways?", icon="warning")
-            if msgbox_space == "yes":
-                copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to Server?"
-                copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
-
-                if copy_yn == 'no':
-                    tk.messagebox.showinfo(message="Copy aborted.")
-                if copy_yn == 'yes':
-                    #update label
-                    lbl_network.config(text="Do not remove/move media!", fg="RED")
-                    tk.messagebox.showwarning(message="Do not remove/move media!")
-                    #Rsync section
-                    try:
-                        remote_target = "%s:%s"%(sshalias,remotepath)
-                        from_target = os.path.join(mount_path,drive_from)
-                        from_target = "'" + str(from_target) + "'"
-                        run_cmd("rsync -rt --progress %s %s > %s"%(from_target,remote_target,logpath))
-                    except:
-                        tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                    lbl_network.config(text="Copied!", fg="GREEN")
-                    return
+                if msgbox_space == "yes":
+                    copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to Server?"
+                    copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
+    
+                    if copy_yn == 'no':
+                        tk.messagebox.showinfo(message="Copy aborted.")
+                    if copy_yn == 'yes':
+                        #update label
+                        lbl_network.config(text="Do not remove/move media!", fg="RED")
+                        tk.messagebox.showwarning(message="Do not remove/move media!")
+                        #Rsync section
+                        try:
+                            remote_target = "%s:%s"%(sshalias,remotepath)
+                            from_target = os.path.join(mount_path,drive_from)
+                            from_target = "'" + str(from_target) + "'"
+                            run_cmd("rsync -rt --progress %s %s > %s"%(from_target,remote_target,logpath))
+                        except:
+                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                        lbl_network.config(text="Copied!", fg="GREEN")
+                        return
             else:
                 tk.messagebox.showinfo(message="Copy aborted.")
     return
