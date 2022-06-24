@@ -293,6 +293,8 @@ def opt_udf(command):
     def opt_umount(silent_yn):
         try:
             os.system("umount %s > %s"%(udf_file,logpath))
+            if exists(udf_mount_path):
+                os.system("rmdir %s > %s"%(udf_mount_path,logpath))
         except:
             if silent_yn == False:
                 tk.messagebox.showerror(title="Error!", message="Something went wrong unmounting " + udf_file)
@@ -307,6 +309,7 @@ def opt_udf(command):
     if command == "mount":
         if exists(udf_file):
             try:
+                os.system("mkdir %s > %s"%(udf_mount_path,logpath))
                 os.system("mount %s > %s"%(udf_file,logpath))
             except:
                 tk.messagebox.showerror(title="Error!", message="Something went wrong mounting")
