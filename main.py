@@ -271,11 +271,11 @@ def remote_space_btn():
 #Optical Media Functions
 #opt_udf creates udf file system,mounts and burns
 #Special thanks to Steve Litt from troubleshooters.com for his guide http://www.troubleshooters.com/linux/blu-ray-backup.htm
-
-var = IntVar()
+opt_rb_groupbox = tk.LabelFrame(tab3, text="Media Size")
+opt_media_var = tk.IntVar(opt_rb_groupbox)
 opt_media_size = ""
 def opt_rb_sel():
-    selection = var.get()
+    selection = opt_media_var.get()
     if selection == 1:
         opt_media_size = "25GB"
     if selection == 2:
@@ -400,11 +400,10 @@ opt_groupbox = tk.LabelFrame(tab3, text="Drives")
 optbtn_groupbox = tk.LabelFrame(tab3)
 opt_lb = tk.Listbox(opt_groupbox, selectmode=tk.SINGLE,exportselection=0)
 opt_lb.pack()
-opt_rb_groupbox = tk.LabelFrame(tab3, text="Media Size")
-opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=var, value=1, command=opt_rb_sel)
-opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=var, value=2, command=opt_rb_sel)
-opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=var, value=3, command=opt_rb_sel)
-opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=var, value=4, command=opt_rb_sel)
+opt_rb_25 = tk.Radiobutton(opt_rb_groupbox, text="25GB", variable=opt_media_var, value=1, command=opt_rb_sel)
+opt_rb_50 = tk.Radiobutton(opt_rb_groupbox, text="50GB", variable=opt_media_var, value=2, command=opt_rb_sel)
+opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=opt_media_var, value=3, command=opt_rb_sel)
+opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=opt_media_var, value=4, command=opt_rb_sel)
 refresh_drives(opt_lb)
 
 btn_opt_burn = tk.Button(optbtn_groupbox, text="Backup", command=lambda:opt_udf("burn"))
