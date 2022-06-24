@@ -221,7 +221,7 @@ def net_backup_drive():
                         remote_target = "%s:%s"%(sshalias,remotepath)
                         from_target = os.path.join(mount_path,drive_from)
                         from_target = "'" + str(from_target) + "'"
-                        run_cmd("rsync -rt --progress %s %s > %s"%(from_target,remote_target,logpath))
+                        run_cmd("rsync -rt --progress %s %s 2> %s"%(from_target,remote_target,logpath))
                     except:
                         tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                     lbl_network.config(text="Copied!", fg="GREEN")
