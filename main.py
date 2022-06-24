@@ -48,23 +48,13 @@ def close_form():
     root.destroy()
     return
 
-#Exit button
-tab1_btn_exit = tk.Button(tab1, text="Exit", command=close_form)
-
-#Drive Tab
-lbl_drive = tk.Label(tab1, text="Select Drives To Transfer", font=('Modern', '20'))
-
+#Drive array for listboxes
 drives = os.listdir(os.path.join("", mount_path))
 drive_path = []
-
 for x in drives:
     drive_path.append(os.path.join(mount_path, x))
 
-from_groupbox = tk.LabelFrame(tab1, text="From")
-to_groupbox = tk.LabelFrame(tab1, text="To")
 
-drive_lb = tk.Listbox(from_groupbox, selectmode=tk.SINGLE, exportselection=0)
-drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
 
 #Opens terminal and runs the command to show large operations
 def run_cmd(cmd):
@@ -85,15 +75,14 @@ def refresh_drives(listboxlb):
         listboxlb.insert(tk.END, x)
     return
 
-#refresh both drives from & to
-def ref_from_to():
-    refresh_drives(drive_lb)
-    refresh_drives(drive_lb2)
+#Refresh two listboxes with one function
+def ref_from_to(lb1,lb2):
+    refresh_drives(lb1)
+    refresh_drives(lb2)
     return
 
     #Initial refresh
-refresh_drives(drive_lb)
-refresh_drives(drive_lb2)
+ref_from_to()
 
     #Copy from drive to drive
 def copy_drive():
@@ -125,7 +114,8 @@ def copy_drive():
                 if copy_yn == 'yes':
                     try:
                         tk.messagebox.showwarning(message="Do not remove/move media!")
-                        cmd = "rsync -rvt --progress" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
+                        cmd = ("rsync -rvt --progress %s %s 2> %s")%(os.path.join(mount_path,drive_from),os.path.join(mount_path,drive_to),logpath)
+                        #cmd = ("rsync -rvt --progress" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to))
                         run_cmd(cmd)
                     except:
                         tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
@@ -307,7 +297,7 @@ def opt_udf(command):
                 try:
                     opt_umount(True)
                     if exists(disc_drive):
-                        cmd = ("growisofs -speed=1 -Z %s=%s > %s"%(disc_drive,udf_file,logpath))
+                        cmd = ("growisofs -speed=1 -Z %s=%s 2> %s"%(disc_drive,udf_file,logpath))
                         run_cmd(cmd)
                     else:
                         tk.Messagebox.showerror(title="Error!",message="No drive detected at %s"%(disc_drive))
@@ -316,6 +306,15 @@ def opt_udf(command):
             else:
                 tk.messagebox.showerror(title="Error!", message="There is nothing to burn")
     return
+
+#Drive to Drive copying
+btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", command=lambda:ref_from_to(drive_lb,drive_lb2))
+btn_drive_start = tk.Button(tab1, text="Transfer Files",command=copy_drive)
+lbl_drive = tk.Label(tab1, text="Select Drives To Transfer", font=('Modern', '20'))
+from_groupbox = tk.LabelFrame(tab1, text="From")
+to_groupbox = tk.LabelFrame(tab1, text="To")
+drive_lb = tk.Listbox(from_groupbox, selectmode=tk.SINGLE, exportselection=0)
+drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
 
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
@@ -328,8 +327,8 @@ btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_driv
 btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
 btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
 btn_net_space = tk.Button(netbtn_groupbox, text="Server Space", command=remote_space_btn)
-btn_drive_refresh = tk.Button(tab1, text="Refresh Devices", fg="BLUE", command=ref_from_to)
-btn_drive_start = tk.Button(tab1, text="Transfer Files", fg="GREEN", command=copy_drive)
+
+
 
 #Optical Drive stuff
 lbl_optical = tk.Label(tab3, text="1. Create/Mount Filesystem\n2.Then use Drive tab to copy files\n3.Burn", font=('Modern', '12'))
