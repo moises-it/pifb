@@ -199,14 +199,10 @@ def net_backup_drive():
             tk.messagebox.showerror(title="Error!", message="Something went wrong contacting server...")
         #continue rest of code if all is well
         else:
-            if from_space_size > int((to_space_available[0])):
-                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
-                the destination media, try anyways?", icon="warning")
-                if msgbox_space == "no":
-                    tk.messagebox.showinfo(message="Copy aborted.")
+            #Main code for drive to network
+            def rsync_copy():
                 copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to Server?"
                 copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
-
                 if copy_yn == 'no':
                     tk.messagebox.showinfo(message="Copy aborted.")
                 if copy_yn == 'yes':
@@ -222,9 +218,20 @@ def net_backup_drive():
                     except:
                         tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
                     lbl_network.config(text="Copied!", fg="GREEN")
-                    return
-                
+                return
+            #Additional conditions
+            if from_space_size > int((to_space_available[0])):
+                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space on\
+                the destination media, try anyways?", icon="warning")
+                if msgbox_space == "no":
+                    tk.messagebox.showinfo(message="Copy aborted.")
+                if msgbox_space == "yes":
+                    rsync_copy()
+            #No other conditions, run
+            else:
+                rsync_copy()
     return
+
 def remote_space_btn():
     try:
         cmd = "ssh " + sshalias + " " + remotescript
