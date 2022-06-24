@@ -284,6 +284,14 @@ def opt_udf(command):
         if opt_media_size == "":
             return False
         return True
+    if command == "mount":
+        if exists(udf_file):
+            try:
+                os.system("mount %s > %s"%(udf_file,logpath))
+            except:
+                tk.messagebox.showerror(title="Error!", message="Something went wrong mounting")
+        else:
+            tk.messagebox.showerror(title="Error!", message="No udf file system to mount")
     if command == "format":
         if check_media_size():
             udf_path = os.path.join(mount_path,udf_file)
@@ -294,13 +302,19 @@ def opt_udf(command):
                 else:
                     os.system("truncate --size=%s %s > %s"%(opt_media_size,udf_path,logpath))
                     os.system("mkudffs %s > %s"%(udf_file,logpath))
+                    opt_udf("mount")
             except:
                 tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
         else:
             tk.messagebox.showerror(title="Error!", message="Select Media Size!")
     if command == "space":
         if exists(udf_file):
-            print()
+            opt_udf("mount")
+            from_path = udf_mount_path
+            from_stat = os.statvfs(from_path)
+            from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
+            from_space_size_gib = from_space_size / 1073741824
+            tk.messagebox.showinfo(title="Space", message="There is %s available."%(from_space_size_gib))
     if command == "delete":
         #Unmounting first if mounted
         opt_umount(True)
