@@ -422,7 +422,7 @@ opt_rb_100 = tk.Radiobutton(opt_rb_groupbox, text="100GB", variable=opt_media_va
 opt_rb_cd = tk.Radiobutton(opt_rb_groupbox, text="700MB", variable=opt_media_var, value=4, command=opt_rb_sel)
 refresh_drives(opt_lb)
 
-btn_opt_burn = tk.Button(optbtn_groupbox, text="Backup", command=lambda:opt_udf("burn"))
+btn_opt_burn = tk.Button(optbtn_groupbox, text="Burn", command=lambda:opt_udf("burn"))
 btn_opt_space = tk.Button(optbtn_groupbox, text="Media Space", command=lambda:opt_udf("space"))
 btn_opt_format = tk.Button(optbtn_groupbox, text="Format Media", command=lambda:opt_udf("format"))
 btn_opt_mount = tk.Button(optbtn_groupbox, text="Mount", command=lambda:opt_udf("mount"))
