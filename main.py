@@ -327,7 +327,6 @@ def opt_udf(command):
                     os.system("truncate --size=%s %s > %s"%(opt_media_size,udf_path,logpath))
                     os.system("mkudffs %s > %s"%(udf_file,logpath))
                     opt_udf("mount")
-                    tk.messagebox.showinfo(title="Done", message="Formated and %s mounted to %s!"%(udf_file,udf_mount_path))
             except:
                 tk.messagebox.showerror(title="Error!", message="There is not enough space to make blu-ray image")
         else:
@@ -335,7 +334,8 @@ def opt_udf(command):
             tk.messagebox.showerror(title="Error!", message="Select Media Size!")
     if command == "space":
         if exists(udf_file):
-            opt_udf("mount")
+            if exists(udf_mount_path) == False:
+                opt_udf("mount")
             from_path = udf_mount_path
             from_stat = os.statvfs(from_path)
             from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
