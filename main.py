@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from cmath import log
+#from cmath import log
 import subprocess
 import socket
 import os
@@ -8,7 +8,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkinter import font
-from typing_extensions import IntVar
+#from typing_extensions import IntVar
 
 #Config/Default stuff
 config = []
@@ -24,7 +24,8 @@ tmp_bash = "/tmp/cmd.sh"
 udf_mount_path = "/media/redux/Blu-Ray/"
 udf_file = "/tmp/pifb-bluray.udf"
 disc_drive = "/dev/sr0"
-#Functions
+
+#Start gui form
 root = tk.Tk()
 root.attributes("-fullscreen", True)
 root.geometry("480x320")
@@ -40,9 +41,9 @@ tabControl.add(tab1, text ='Drive')
 tabControl.add(tab2, text ='Network')
 tabControl.add(tab3, text ='Optical')
 tabControl.add(tab4, text ='Config')
-
 tabControl.pack(expand = 1, fill="both")
 
+#Functions
 #Exit button function
 def close_form():
     root.destroy()
@@ -54,8 +55,6 @@ drive_path = []
 for x in drives:
     drive_path.append(os.path.join(mount_path, x))
 
-
-
 #Opens terminal and runs the command to show large operations
 def run_cmd(cmd):
     try:
@@ -66,6 +65,7 @@ def run_cmd(cmd):
     except:
         tk.messagebox.showerror(title="Error",message="Couldn't make temp file in %s, needed for core functionality"%(tmp_bash))
     return
+#Updates listboxes to show media removed/added
 def refresh_drives(listboxlb):
     listboxlb.delete('0', 'end')
     drives = os.listdir(os.path.join("", mount_path))
@@ -81,10 +81,7 @@ def ref_from_to(lb1,lb2):
     refresh_drives(lb2)
     return
 
-    #Initial refresh
-ref_from_to()
-
-    #Copy from drive to drive
+ #Copy from drive to drive
 def copy_drive():
     try:
         drive_from = drive_lb.get(drive_lb.curselection())
@@ -315,7 +312,8 @@ from_groupbox = tk.LabelFrame(tab1, text="From")
 to_groupbox = tk.LabelFrame(tab1, text="To")
 drive_lb = tk.Listbox(from_groupbox, selectmode=tk.SINGLE, exportselection=0)
 drive_lb2 = tk.Listbox(to_groupbox, selectmode=tk.SINGLE, exportselection=0)
-
+#iniitial drive refresh for both listboxes
+ref_from_to(drive_lb,drive_lb2)
 #Network copying
 lbl_network = tk.Label(tab2, text="Select Drive to Backup", font=('Modern', '20'))
 net_groupbox = tk.LabelFrame(tab2, text="Drives")
@@ -327,8 +325,6 @@ btn_net_copy = tk.Button(netbtn_groupbox, text="Backup", command=net_backup_driv
 btn_net_refresh = tk.Button(netbtn_groupbox, text="Refresh", command=lambda: refresh_drives(net_lb))
 btn_net_exit = tk.Button(netbtn_groupbox, text="Exit", command=close_form)
 btn_net_space = tk.Button(netbtn_groupbox, text="Server Space", command=remote_space_btn)
-
-
 
 #Optical Drive stuff
 lbl_optical = tk.Label(tab3, text="1. Create/Mount Filesystem\n2.Then use Drive tab to copy files\n3.Burn", font=('Modern', '12'))
