@@ -107,7 +107,7 @@ def copy_drive():
         if drive_from == drive_to:
             tk.messagebox.showerror(title="Error",message="Can't copy to the same drive!")
         else:
-            #Contuine if drives are selected properly
+            #Continue if drives are selected properly
             #Check if space available
             from_path = os.path.join(mount_path, drive_from)
             to_path = os.path.join(mount_path, drive_to)
@@ -117,36 +117,29 @@ def copy_drive():
             from_space_size = (from_stat.f_frsize * from_stat.f_blocks) - (from_stat.f_frsize * from_stat.f_bfree)
             from_space_size_gib = from_space_size / 1073741824
             to_space_available = (to_stat.f_frsize * to_stat.f_bfree)
-
-            continue_yn = True
-            if from_space_size > to_space_available:
-                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space \
-                on the destination media, try anyways?", icon="warning")
-                if msgbox_space == 'no':
-                    continue_yn = False
-
-            if continue_yn:
+            def rsync_copy():
                 copy_yn_message = "Copy " + str(round(from_space_size_gib, 2)) + " GiB from " + drive_from  + " to " + drive_to + "?"
                 copy_yn = tk.messagebox.askquestion(title="Continue?", message=copy_yn_message)
-
                 if copy_yn == 'no':
                     tk.messagebox.showinfo(message="Copy aborted.")
                 if copy_yn == 'yes':
-                    #update label
-                    lbl_drive.config(text="Do not remove/move media!", fg="RED")
-                    tk.messagebox.showwarning(message="Do not remove/move media!")
-                    def rsync_copy():
-                        #Rsync section
-                        try:
-                            cmd = "rsync -rvt --progress" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
-                            run_cmd(cmd)
-                        except:
-                            tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
-                        lbl_drive.config(text="Copied!", fg="GREEN")
-                        return
+                    try:
+                        tk.messagebox.showwarning(message="Do not remove/move media!")
+                        cmd = "rsync -rvt --progress" + " " + os.path.join(mount_path,drive_from) + " " + os.path.join(mount_path,drive_to)
+                        run_cmd(cmd)
+                    except:
+                        tk.messagebox.showerror(title="Error!", message="Something went wrong while copying, please check log")
+                    lbl_drive.config(text="Copied!", fg="GREEN")
+            if from_space_size > to_space_available:
+                msgbox_space = tk.messagebox.askquestion(title='Continue?', message="There is not enough space \
+                on the destination media, try anyways?", icon="warning")
+                if msgbox_space == "no":
+                    tk.messagebox.showinfo(title="Aborted.",message="Transfer aborted.")
+                if msgbox_space == "yes":
                     rsync_copy()
+            #No other conditions, run
             else:
-                tk.messagebox.showinfo(message="Copy aborted.")
+                rsync_copy()
     return
 
 def net_backup_drive():
@@ -314,27 +307,8 @@ def opt_udf(command):
                 try:
                     opt_umount(True)
                     if exists(disc_drive):
-                        os.system("growisofs -speed=1 -Z %s=%s > %s"%(disc_drive,udf_file,logpath))
-                        #Verbose
-                        def verbose_exit():
-                                copy_verbose.destroy()
-                                return
-                        copy_verbose = tk.Tk()
-                        copy_verbose.attributes("-fullscreen", True)
-                        copy_verbose.geometry("480x320")
-                        btn_verbose_exit = tk.Button(copy_verbose, text="Exit", command=verbose_exit)
-                        rsync_log_txt = tk.Text(copy_verbose)
-                        rsync_log_txt.pack(side=tk.TOP)
-                        rsync_log_txt.place(height=200,width=480)
-                        scrollbar = tk.Scrollbar(rsync_log_txt, orient="vertical", command=rsync_log_txt.yview)
-                        scrollbar.pack(side=tk.RIGHT, fill="y")
-                        rsync_log_txt.config(yscrollcommand=scrollbar.set)
-                        verbose = open(logpath, 'r')
-                        Lines = verbose.readlines()
-                        for line in Lines:
-                            rsync_log_txt.insert(tk.END, line)
-                            rsync_log_txt.see(tk.END)
-                        btn_verbose_exit.pack(side=tk.BOTTOM)
+                        cmd = ("growisofs -speed=1 -Z %s=%s > %s"%(disc_drive,udf_file,logpath))
+                        run_cmd(cmd)
                     else:
                         tk.Messagebox.showerror(title="Error!",message="No drive detected at %s"%(disc_drive))
                 except:
