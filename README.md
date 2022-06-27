@@ -1,4 +1,4 @@
-This program written in mostly python, gives the user a GUI in order to easily backup files on the press of a button via drive to drive or drive to network copy.
+This program written in mostly python, gives the user a GUI in order to easily backup files on the press of a few buttons via drive to drive or drive to network copy.
 It utilizes rsync for the bulk of its functions.
 
 Network feature needs private key setup to the destination server with .ssh/config alias setup, this way rsync can work without a password.
